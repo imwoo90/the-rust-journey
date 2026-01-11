@@ -1,10 +1,14 @@
 use crate::components::{Container, Hero, Input, PrimaryButton, Section, SectionTitle, TextArea};
+use crate::data::constants::{
+    APP_TITLE, AUTHOR_EMAIL, AUTHOR_NAME, GITHUB_URL, GITHUB_USERNAME, LINKEDIN_URL,
+};
 use crate::views::Footer;
 use dioxus::prelude::*;
 
 #[component]
 pub fn Contact() -> Element {
     rsx! {
+        document::Title { "Contact - {APP_TITLE}" }
         Container {
             Hero {
                 title: "Get In Touch",
@@ -52,20 +56,20 @@ pub fn Contact() -> Element {
                             ContactInfoItem {
                                 icon: "mail",
                                 label: "Email",
-                                value: "contact@rustshorizon.com",
-                                href: "mailto:contact@rustshorizon.com",
+                                value: "{AUTHOR_EMAIL}",
+                                href: "mailto:{AUTHOR_EMAIL}",
                             }
                             ContactInfoItem {
                                 icon: "link",
                                 label: "GitHub",
-                                value: "@rust-developer",
-                                href: "https://github.com",
+                                value: "@{GITHUB_USERNAME}",
+                                href: "{GITHUB_URL}",
                             }
                             ContactInfoItem {
                                 icon: "group",
                                 label: "LinkedIn",
-                                value: "Jane Doe",
-                                href: "https://linkedin.com",
+                                value: "{AUTHOR_NAME}",
+                                href: "{LINKEDIN_URL}",
                             }
                         }
                     }

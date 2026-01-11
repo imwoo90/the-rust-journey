@@ -1,10 +1,12 @@
 use crate::components::*;
+use crate::data::constants::APP_TITLE;
 use crate::Route;
 use dioxus::prelude::*;
 
 #[component]
 pub fn NotFound(segments: Vec<String>) -> Element {
     rsx! {
+        document::Title { "404 - {APP_TITLE}" }
         Container {
             main { class: "flex-grow flex flex-col items-center justify-center px-4 py-16 md:py-24 w-full min-h-[60vh] transition-colors duration-300",
                 div { class: "w-full max-w-2xl bg-surface-dark dark:bg-background-darker border border-surface-border dark:border-white/10 rounded-xl shadow-2xl overflow-hidden mb-12",

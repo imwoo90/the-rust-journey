@@ -3,6 +3,7 @@ use crate::components::{
     ShareButtons,
 };
 use crate::data::blog::{get_all_categories, get_all_posts, get_post_by_id};
+use crate::data::constants::APP_TITLE;
 use crate::data::utils::{get_base_path, markdown_to_html};
 use crate::hooks::use_syntax_highlighting;
 use crate::views::Footer;
@@ -63,7 +64,7 @@ pub fn BlogPost(id: String) -> Element {
         Some(Some(post)) => {
             let html_content = markdown_to_html(&post.content, &post.meta.id, "posts");
             rsx! {
-                document::Title { "{post.meta.title} - Rust's Horizon" }
+                document::Title { "{post.meta.title} - {APP_TITLE}" }
                 div { class: "layout-content-container flex flex-col w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16",
                     article { class: "w-full max-w-3xl flex flex-col gap-10",
                         EntryHero {

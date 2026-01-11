@@ -1,10 +1,12 @@
 use crate::components::{Badge, Container, Section, SectionTitle, TimelineItem};
+use crate::data::constants::{APP_TITLE, AUTHOR_NAME};
 use crate::views::Footer;
 use dioxus::prelude::*;
 
 #[component]
 pub fn About() -> Element {
     rsx! {
+        document::Title { "About - {APP_TITLE}" }
         Container {
             main { class: "flex flex-col gap-16 md:gap-24 mt-8 md:mt-16",
                 section { class: "flex flex-col md:flex-row items-center gap-8 md:gap-12 px-4",
@@ -17,7 +19,7 @@ pub fn About() -> Element {
                     }
                     div { class: "flex flex-col gap-4 text-center md:text-left",
                         h1 { class: "text-text-dark dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] transition-colors",
-                            "Hi, I'm Alex."
+                            "Hi, I'm {AUTHOR_NAME}."
                         }
                         p { class: "text-lg md:text-xl font-normal leading-normal text-text-dark/80 dark:text-[#D4D4D4] transition-colors",
                             "I'm a full-stack embedded developer with a singular passion: leveraging the power of Rust to build robust, efficient, and secure software across every conceivable platform. From the tight constraints of bare-metal microcontrollers to the vast scale of cloud backends, I believe Rust is the key to a new era of reliable systems."

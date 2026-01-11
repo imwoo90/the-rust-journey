@@ -2,6 +2,7 @@ use crate::components::{
     BlogCategories, BlogSearch, CallToAction, Card, Comment, Comments, Container, EntryHero, Hero,
     Section,
 };
+use crate::data::constants::APP_TITLE;
 use crate::data::projects::{get_all_categories, get_all_projects, get_project_by_id};
 use crate::data::utils::{get_base_path, markdown_to_html};
 use crate::hooks::use_syntax_highlighting;
@@ -68,7 +69,7 @@ pub fn ProjectPost(id: String) -> Element {
             let html_content = markdown_to_html(&project.content, &project.meta.id, "projects");
 
             rsx! {
-                document::Title { "{project.meta.title} - Rust's Horizon" }
+                document::Title { "{project.meta.title} - {APP_TITLE}" }
                 div { class: "layout-content-container flex flex-col w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16",
                     article { class: "w-full max-w-3xl flex flex-col gap-10",
                         EntryHero {

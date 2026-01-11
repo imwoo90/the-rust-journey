@@ -1,3 +1,4 @@
+use crate::data::constants::APP_TITLE;
 use crate::Route;
 use dioxus::prelude::*;
 
@@ -13,7 +14,7 @@ pub fn Navbar() -> Element {
                 class: "flex items-center gap-4 text-text-dark dark:text-white group",
                 Logo { class: "group-hover:scale-110 transition-transform duration-300" }
                 h2 { class: "text-text-dark dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]",
-                    "Rust's Horizon"
+                    "{APP_TITLE}"
                 }
             }
             div { class: "flex flex-1 justify-end items-center gap-4",

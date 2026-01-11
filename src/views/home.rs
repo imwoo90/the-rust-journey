@@ -1,5 +1,6 @@
 use crate::components::*;
 use crate::data::blog::get_all_posts;
+use crate::data::constants::{APP_SUBTITLE, APP_TITLE};
 use crate::data::projects::get_all_projects;
 use crate::data::utils::get_base_path;
 use crate::views::Footer;
@@ -55,11 +56,12 @@ pub fn Home() -> Element {
     let latest_elements = recent_items.into_iter().take(3).map(|(_, el)| el);
 
     rsx! {
+        document::Title { "{APP_TITLE}" }
         Container {
             main { class: "flex flex-col gap-16 md:gap-24 mt-8 md:mt-16",
                 Hero {
-                    title: "Rust's Horizon",
-                    subtitle: "Navigating the Rust ecosystem from silicon to screen. I document the journey of building high-performance software across the entire stack—spanning bare-metal MCUs, backend services, and native mobile apps.",
+                    title: "{APP_TITLE}",
+                    subtitle: "{APP_SUBTITLE}",
                     PrimaryButton { to: Route::BlogList {}, text: "Explore the Blog" }
                 }
 
