@@ -5,7 +5,7 @@ pub const AUTHOR_EMAIL: &str = "wim90@kakao.com";
 pub const GITHUB_USERNAME: &str = "imwoo90";
 pub const GITHUB_URL: &str = "https://github.com/imwoo90";
 pub const LINKEDIN_URL: &str = "https://linkedin.com";
-pub const COPYRIGHT_YEAR: &str = "2024";
+pub const COPYRIGHT_YEAR: &str = "2026";
 
 use dioxus::prelude::*;
 pub const FAVICON: Asset = asset!("assets/favicon.png");

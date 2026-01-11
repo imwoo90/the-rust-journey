@@ -1,5 +1,5 @@
 use crate::components::{
-    BlogCategories, BlogSearch, CallToAction, Card, Comment, Comments, Container, EntryHero, Hero,
+    CallToAction, Card, CategoryFilter, Comment, Comments, Container, DetailHero, Hero, SearchBar,
     Section,
 };
 use crate::data::constants::APP_TITLE;
@@ -12,28 +12,51 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn ProjectList() -> Element {
+    let mut search_query = use_signal(|| "".to_string());
+    let mut selected_category = use_signal(|| "All".to_string());
     let projects = get_all_projects();
+
+    let filtered_projects = projects.into_iter().filter(|project| {
+        let matches_search = project
+            .title
+            .to_lowercase()
+            .contains(&search_query().to_lowercase())
+            || project
+                .description
+                .to_lowercase()
+                .contains(&search_query().to_lowercase());
+        let matches_category =
+            selected_category() == "All" || project.tags.contains(&selected_category());
+        matches_search && matches_category
+    });
 
     rsx! {
         Container {
             main { class: "flex flex-col gap-12 mt-8 md:mt-16",
                 Hero {
                     title: "The Workshop",
-                    subtitle: "A collection of my work, showcasing the versatility of Rust across the full stack.",
+                    subtitle: "Tangible milestones of my journey—a curated collection of tools, libraries, and applications forged along the road.",
                     centered: Some(false),
                     children: rsx! {
-                        div { class: "flex flex-col md:flex-row gap-4 w-full items-center mt-4",
-                            BlogSearch { placeholder: "Search projects..." }
-                            BlogCategories {
+                        div { class: "flex flex-col gap-6 w-full mt-4",
+                            div { class: "w-full max-w-2xl",
+                                SearchBar {
+                                    placeholder: "Search projects...",
+                                    value: search_query(),
+                                    oninput: move |e: FormEvent| search_query.set(e.value()),
+                                }
+                            }
+                            CategoryFilter {
                                 categories: get_all_categories(),
-                                active: "All".to_string(),
+                                active: selected_category(),
+                                onchange: move |cat| selected_category.set(cat),
                             }
                         }
                     },
                 }
                 Section { class: "px-4 mb-20",
                     div { class: "grid grid-cols-1 md:grid-cols-2 gap-8",
-                        for project in projects {
+                        for project in filtered_projects {
                             Card {
                                 title: project.title.clone(),
                                 description: project.description.clone(),
@@ -72,7 +95,7 @@ pub fn ProjectPost(id: String) -> Element {
                 document::Title { "{project.meta.title} - {APP_TITLE}" }
                 div { class: "layout-content-container flex flex-col w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16",
                     article { class: "w-full max-w-3xl flex flex-col gap-10",
-                        EntryHero {
+                        DetailHero {
                             title: project.meta.title.clone(),
                             author: project.meta.author.clone(),
                             date: project.meta.date.clone(),

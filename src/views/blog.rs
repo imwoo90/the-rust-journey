@@ -1,5 +1,5 @@
 use crate::components::{
-    BlogCategories, BlogSearch, Card, Comment, Comments, Container, EntryHero, Hero, Section,
+    Card, CategoryFilter, Comment, Comments, Container, DetailHero, Hero, SearchBar, Section,
     ShareButtons,
 };
 use crate::data::blog::{get_all_categories, get_all_posts, get_post_by_id};
@@ -12,27 +12,50 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn BlogList() -> Element {
+    let mut search_query = use_signal(|| "".to_string());
+    let mut selected_category = use_signal(|| "All".to_string());
     let posts = get_all_posts();
+
+    let filtered_posts = posts.into_iter().filter(|post| {
+        let matches_search = post
+            .title
+            .to_lowercase()
+            .contains(&search_query().to_lowercase())
+            || post
+                .description
+                .to_lowercase()
+                .contains(&search_query().to_lowercase());
+        let matches_category =
+            selected_category() == "All" || post.tags.contains(&selected_category());
+        matches_search && matches_category
+    });
 
     rsx! {
         Container {
             main { class: "flex flex-col gap-12 mt-8 md:mt-16",
                 Hero {
-                    title: "From the Horizon",
-                    subtitle: "Exploring the frontiers of Rust, from bare-metal to the web. Find articles, tutorials, and deep dives here.",
+                    title: "The Journey's Log",
+                    subtitle: "Documenting every breakthrough and lesson learned while navigating the Rust ecosystem—from bare-metal firmware to cloud-native services.",
                 }
 
                 // Filter / Search Section
-                section { class: "flex flex-col md:flex-row gap-4 px-4 items-center",
-                    BlogSearch { placeholder: "Search articles..." }
-                    BlogCategories {
+                section { class: "flex flex-col gap-6 px-4",
+                    div { class: "w-full max-w-3xl",
+                        SearchBar {
+                            placeholder: "Search articles...",
+                            value: search_query(),
+                            oninput: move |e: FormEvent| search_query.set(e.value()),
+                        }
+                    }
+                    CategoryFilter {
                         categories: get_all_categories(),
-                        active: "All".to_string(),
+                        active: selected_category(),
+                        onchange: move |cat| selected_category.set(cat),
                     }
                 }
 
                 Section { class: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
-                    for post in posts {
+                    for post in filtered_posts {
                         Card {
                             title: post.title.clone(),
                             description: post.description.clone(),
@@ -67,7 +90,7 @@ pub fn BlogPost(id: String) -> Element {
                 document::Title { "{post.meta.title} - {APP_TITLE}" }
                 div { class: "layout-content-container flex flex-col w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16",
                     article { class: "w-full max-w-3xl flex flex-col gap-10",
-                        EntryHero {
+                        DetailHero {
                             title: post.meta.title.clone(),
                             author: post.meta.author.clone(),
                             date: post.meta.date.clone(),
