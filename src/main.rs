@@ -7,6 +7,8 @@ mod data;
 mod hooks;
 mod views;
 
+use data::constants::FAVICON;
+
 #[derive(Debug, Clone, Routable, PartialEq)]
 enum Route {
     #[layout(Navbar)]
@@ -35,7 +37,6 @@ enum Route {
     NotFound { segments: Vec<String> },
 }
 
-const FAVICON: Asset = asset!("assets/favicon.png");
 const MAIN_CSS: Asset = asset!("assets/tailwind.css");
 
 fn main() {
