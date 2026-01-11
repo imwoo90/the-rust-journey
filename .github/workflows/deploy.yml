@@ -1,0 +1,64 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install Dioxus CLI
+        run: |
+          curl -L https://github.com/DioxusLabs/dioxus/releases/download/v0.7.2/dx-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+          chmod +x dx
+          mv dx /usr/local/bin/
+          
+      - name: Set Base Path
+        run: |
+          # Extract repository name from github.repository (e.g., 'user/repo' -> 'repo')
+          REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
+          echo "Setting base_path to $REPO_NAME in Dioxus.toml"
+          # Use sed to update the base_path value
+          sed -i "s/base_path = \".*\"/base_path = \"$REPO_NAME\"/" Dioxus.toml
+
+      - name: Build with Dioxus
+        run: |
+          # Use dx bundle with --out-dir for a predictable output location
+          # This works regardless of the base_path setting
+          dx bundle --release --platform web --out-dir dist
+
+      - name: Post Build Adjustments
+        run: |
+          # Dioxus 0.7 web bundle puts assets in [out-dir]/public/
+          mkdir -p docs
+          cp -r dist/public/* docs/
+          
+          # Manually inject <base> tag if it's missing (Crucial for GitHub Pages)
+          REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
+          sed -i "s|<head>|<head><base href=\"/$REPO_NAME/\">|" docs/index.html
+          
+          # Disable Jekyll processing for GitHub Pages
+          touch docs/.nojekyll
+          
+          # Support SPA routing on refresh
+          cp docs/index.html docs/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs
+          branch: gh-pages
+          clean: true

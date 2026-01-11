@@ -1,0 +1,4 @@
+target/
+public/content/posts_index.json
+public/content/projects_index.json
+assets/tailwind.css

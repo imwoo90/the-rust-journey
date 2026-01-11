@@ -1,0 +1,162 @@
+@import "tailwindcss";
+@source "./src/**/*.{rs,html,css}";
+
+@theme {
+    /* Colors */
+    --color-primary: #ec5b13;
+    --color-primary-light: #DEA584;
+    --color-background-light: #f8f6f6;
+    --color-background-dark: #1E1E1E;
+    --color-background-darker: #121212;
+    --color-surface-dark: #2d1f18;
+    --color-surface-border: #482f23;
+    --color-text-light: #D4D4D4;
+    --color-text-dark: #1E1E1E;
+    --color-text-heading: #FFFFFF;
+    --color-border-dark: rgba(255, 255, 255, 0.1);
+
+    /* Fonts */
+    --font-display: "Inter", sans-serif;
+    --font-mono: "Fira Code", "Roboto Mono", monospace;
+
+    /* Border Radius */
+    --radius-md: 0.375rem;
+}
+
+/* Enable class-based dark mode */
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+    body {
+        @apply bg-background-light text-text-dark dark:bg-background-dark dark:text-text-light transition-colors duration-300;
+    }
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Prose customization that respects light/dark mode */
+.prose {
+    @apply text-text-dark/80 dark:text-text-light;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+    @apply text-text-dark dark:text-text-heading font-bold;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.prose a {
+    @apply text-primary hover:text-primary-light transition-colors;
+    text-decoration: none;
+}
+
+.prose blockquote {
+    @apply border-l-4 border-primary bg-text-dark/5 dark:bg-white/5 text-text-dark/60 dark:text-gray-400 italic;
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.prose code {
+    @apply bg-text-dark/5 dark:bg-white/10 text-primary-light px-1.5 py-0.5 rounded font-mono text-[0.9em] font-medium;
+}
+
+.prose pre {
+    @apply bg-[#1E1E1E] border border-white/5 p-8 rounded-2xl overflow-x-auto my-8 shadow-2xl;
+    /* Force high-contrast light text inside pre blocks */
+    color: #e4e4e7;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.prose pre code {
+    @apply bg-transparent p-0 text-inherit;
+    font-family: var(--font-mono);
+}
+
+.prose p {
+    margin-bottom: 1.5em;
+    line-height: 1.8;
+}
+
+.prose ul,
+.prose ol {
+    @apply mb-6 ml-6 list-disc;
+}
+
+.prose li {
+    @apply mb-2;
+}
+
+/* Custom Syntax Highlighting (matching the project's premium aesthetic) */
+.hljs-comment,
+.hljs-quote {
+    @apply text-gray-500 italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-addition {
+    @apply text-primary-light font-bold;
+}
+
+.hljs-number,
+.hljs-string,
+.hljs-meta .hljs-string,
+.hljs-literal,
+.hljs-doctag,
+.hljs-regexp {
+    @apply text-[#b5cea8];
+    /* Soft green for strings/numbers */
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+    @apply text-[#dcdcaa];
+    /* Soft yellow for titles */
+}
+
+.hljs-attribute,
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-class .hljs-title,
+.hljs-type {
+    @apply text-[#9cdcfe];
+    /* Soft blue for types/attrs */
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-link {
+    @apply text-[#c586c0];
+    /* Soft purple for symbols */
+}
+
+.hljs-built_in,
+.hljs-deletion {
+    @apply text-[#ce9178];
+    /* Terracotta for built-ins */
+}
+
+.hljs-formula {
+    background: #eee;
+    font-style: italic;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
