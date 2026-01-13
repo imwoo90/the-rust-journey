@@ -1,10 +1,7 @@
-use crate::components::{
-    CallToAction, Card, CategoryFilter, Comment, Comments, Container, DetailHero, Hero, SearchBar,
-    Section,
-};
+use crate::components::{CallToAction, Comment, Comments, ContentGallery, DetailHero, GalleryItem};
 use crate::data::constants::APP_TITLE;
-use crate::data::projects::{get_all_categories, get_all_projects, get_project_by_id};
-use crate::data::utils::{get_base_path, markdown_to_html};
+use crate::data::projects::{derive_categories, fetch_all_projects, get_project_by_id};
+use crate::data::utils::markdown_to_html;
 use crate::hooks::use_syntax_highlighting;
 use crate::views::Footer;
 use crate::Route;
@@ -12,68 +9,41 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn ProjectList() -> Element {
-    let mut search_query = use_signal(|| "".to_string());
-    let mut selected_category = use_signal(|| "All".to_string());
-    let projects = get_all_projects();
+    let projects_resource = use_resource(fetch_all_projects);
 
-    let filtered_projects = projects.into_iter().filter(|project| {
-        let matches_search = project
-            .title
-            .to_lowercase()
-            .contains(&search_query().to_lowercase())
-            || project
-                .description
-                .to_lowercase()
-                .contains(&search_query().to_lowercase());
-        let matches_category =
-            selected_category() == "All" || project.tags.contains(&selected_category());
-        matches_search && matches_category
-    });
+    let projects_guard = projects_resource.read();
 
-    rsx! {
-        Container {
-            main { class: "flex flex-col gap-12 mt-8 md:mt-16",
-                Hero {
+    match &*projects_guard {
+        Some(projects) => {
+            let items = projects
+                .iter()
+                .map(|project| GalleryItem {
+                    id: project.id.clone(),
+                    title: project.title.clone(),
+                    description: project.description.clone(),
+                    image_url: project.image_url.clone(),
+                    tags: project.tags.clone(),
+                })
+                .collect();
+
+            rsx! {
+                ContentGallery {
                     title: "The Workshop",
                     subtitle: "Tangible milestones of my journey—a curated collection of tools, libraries, and applications forged along the road.",
-                    centered: Some(false),
-                    children: rsx! {
-                        div { class: "flex flex-col gap-6 w-full mt-4",
-                            div { class: "w-full max-w-2xl",
-                                SearchBar {
-                                    placeholder: "Search projects...",
-                                    value: search_query(),
-                                    oninput: move |e: FormEvent| search_query.set(e.value()),
-                                }
-                            }
-                            CategoryFilter {
-                                categories: get_all_categories(),
-                                active: selected_category(),
-                                onchange: move |cat| selected_category.set(cat),
-                            }
-                        }
-                    },
-                }
-                Section { class: "px-4 mb-20",
-                    div { class: "grid grid-cols-1 md:grid-cols-2 gap-8",
-                        for project in filtered_projects {
-                            Card {
-                                title: project.title.clone(),
-                                description: project.description.clone(),
-                                image_url: format!("{}/{}", get_base_path(), project.image_url),
-                                tags: project.tags.clone(),
-                                link_text: project.link_text.clone().unwrap_or_else(|| "View Details".to_string()),
-                                external_link: if project.route.is_none() && project.link.is_some() { project.link.clone().unwrap_or_else(|| "#".to_string()) } else { "".to_string() },
-                                link_to: Some(Route::ProjectPost {
-                                    id: project.id.clone(),
-                                }),
-                            }
-                        }
-                    }
+                    search_placeholder: "Search projects...",
+                    items: items,
+                    categories: derive_categories(projects),
+                    route_factory: |id| Route::ProjectPost { id },
+                    centered_hero: Some(false),
                 }
             }
         }
-        Footer {}
+        None => rsx! {
+            div { class: "flex flex-col items-center justify-center min-h-[60vh]",
+                div { class: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-light" }
+                p { class: "mt-4 text-text-dark/60 dark:text-text-light/60", "Loading index..." }
+            }
+        },
     }
 }
 

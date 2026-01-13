@@ -1,10 +1,7 @@
-use crate::components::{
-    Card, CategoryFilter, Comment, Comments, Container, DetailHero, Hero, SearchBar, Section,
-    ShareButtons,
-};
-use crate::data::blog::{get_all_categories, get_all_posts, get_post_by_id};
+use crate::components::{Comment, Comments, ContentGallery, DetailHero, GalleryItem, ShareButtons};
+use crate::data::blog::{derive_categories, fetch_all_posts, get_post_by_id};
 use crate::data::constants::APP_TITLE;
-use crate::data::utils::{get_base_path, markdown_to_html};
+use crate::data::utils::markdown_to_html;
 use crate::hooks::use_syntax_highlighting;
 use crate::views::Footer;
 use crate::Route;
@@ -12,64 +9,40 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn BlogList() -> Element {
-    let mut search_query = use_signal(|| "".to_string());
-    let mut selected_category = use_signal(|| "All".to_string());
-    let posts = get_all_posts();
+    let posts_resource = use_resource(fetch_all_posts);
 
-    let filtered_posts = posts.into_iter().filter(|post| {
-        let matches_search = post
-            .title
-            .to_lowercase()
-            .contains(&search_query().to_lowercase())
-            || post
-                .description
-                .to_lowercase()
-                .contains(&search_query().to_lowercase());
-        let matches_category =
-            selected_category() == "All" || post.tags.contains(&selected_category());
-        matches_search && matches_category
-    });
+    let posts_guard = posts_resource.read();
 
-    rsx! {
-        Container {
-            main { class: "flex flex-col gap-12 mt-8 md:mt-16",
-                Hero {
+    match &*posts_guard {
+        Some(posts) => {
+            let items = posts
+                .iter()
+                .map(|post| GalleryItem {
+                    id: post.id.clone(),
+                    title: post.title.clone(),
+                    description: post.description.clone(),
+                    image_url: post.image_url.clone(),
+                    tags: post.tags.clone(),
+                })
+                .collect();
+
+            rsx! {
+                ContentGallery {
                     title: "The Journey's Log",
                     subtitle: "Documenting every breakthrough and lesson learned while navigating the Rust ecosystem—from bare-metal firmware to cloud-native services.",
-                }
-
-                // Filter / Search Section
-                section { class: "flex flex-col gap-6 px-4",
-                    div { class: "w-full max-w-3xl",
-                        SearchBar {
-                            placeholder: "Search articles...",
-                            value: search_query(),
-                            oninput: move |e: FormEvent| search_query.set(e.value()),
-                        }
-                    }
-                    CategoryFilter {
-                        categories: get_all_categories(),
-                        active: selected_category(),
-                        onchange: move |cat| selected_category.set(cat),
-                    }
-                }
-
-                Section { class: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
-                    for post in filtered_posts {
-                        Card {
-                            title: post.title.clone(),
-                            description: post.description.clone(),
-                            image_url: format!("{}/{}", get_base_path(), post.image_url),
-                            tags: post.tags.clone(),
-                            link_to: Route::BlogPost {
-                                id: post.id.clone(),
-                            },
-                        }
-                    }
+                    search_placeholder: "Search articles...",
+                    items: items,
+                    categories: derive_categories(posts),
+                    route_factory: |id| Route::BlogPost { id },
                 }
             }
         }
-        Footer {}
+        None => rsx! {
+            div { class: "flex flex-col items-center justify-center min-h-[60vh]",
+                div { class: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-light" }
+                p { class: "mt-4 text-text-dark/60 dark:text-text-light/60", "Loading index..." }
+            }
+        },
     }
 }
 

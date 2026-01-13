@@ -1,8 +1,6 @@
 use crate::data::utils::{get_base_path, parse_frontmatter};
 use serde::{Deserialize, Serialize};
 
-const POSTS_INDEX: &str = include_str!("../../public/content/posts_index.json");
-
 /// Metadata for a blog post.
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct PostMeta {
@@ -30,21 +28,24 @@ impl Post {
     }
 }
 
-/// Retrieves all blog posts metadata, sorted by date descending.
-pub fn get_all_posts() -> Vec<PostMeta> {
-    let mut posts: Vec<PostMeta> = serde_json::from_str(POSTS_INDEX).unwrap_or_default();
+/// Fetches all blog posts metadata from the server, sorted by date descending.
+pub async fn fetch_all_posts() -> Vec<PostMeta> {
+    let url = format!("{}/content/posts_index.json", get_base_path());
+    let mut posts: Vec<PostMeta> = match gloo_net::http::Request::get(&url).send().await {
+        Ok(resp) => resp.json().await.unwrap_or_default(),
+        Err(_) => Vec::new(),
+    };
     // Sort by date descending
     posts.sort_by(|a, b| b.date.cmp(&a.date));
     posts
 }
 
-/// Retrieves all unique categories (tags) from all blog posts.
-pub fn get_all_categories() -> Vec<String> {
-    let posts = get_all_posts();
+/// Derives unique categories from a list of posts.
+pub fn derive_categories(posts: &[PostMeta]) -> Vec<String> {
     let mut categories = std::collections::HashSet::new();
     for post in posts {
-        for tag in post.tags {
-            categories.insert(tag);
+        for tag in &post.tags {
+            categories.insert(tag.clone());
         }
     }
     let mut categories: Vec<String> = categories.into_iter().collect();

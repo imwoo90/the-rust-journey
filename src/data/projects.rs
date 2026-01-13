@@ -1,8 +1,6 @@
 use crate::data::utils::{get_base_path, parse_frontmatter};
 use serde::{Deserialize, Serialize};
 
-const PROJECTS_INDEX: &str = include_str!("../../public/content/projects_index.json");
-
 /// Metadata for a project, parsed from Markdown frontmatter.
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct ProjectMeta {
@@ -33,21 +31,24 @@ impl Project {
     }
 }
 
-/// Retrieves all projects metadata, sorted by date descending.
-pub fn get_all_projects() -> Vec<ProjectMeta> {
-    let mut projects: Vec<ProjectMeta> = serde_json::from_str(PROJECTS_INDEX).unwrap_or_default();
+/// Fetches all projects metadata from the server, sorted by date descending.
+pub async fn fetch_all_projects() -> Vec<ProjectMeta> {
+    let url = format!("{}/content/projects_index.json", get_base_path());
+    let mut projects: Vec<ProjectMeta> = match gloo_net::http::Request::get(&url).send().await {
+        Ok(resp) => resp.json().await.unwrap_or_default(),
+        Err(_) => Vec::new(),
+    };
     // Sort by date descending
     projects.sort_by(|a, b| b.date.cmp(&a.date));
     projects
 }
 
-/// Retrieves all unique categories (tags) from all projects.
-pub fn get_all_categories() -> Vec<String> {
-    let projects = get_all_projects();
+/// Derives unique categories from a list of projects.
+pub fn derive_categories(projects: &[ProjectMeta]) -> Vec<String> {
     let mut categories = std::collections::HashSet::new();
     for project in projects {
-        for tag in project.tags {
-            categories.insert(tag);
+        for tag in &project.tags {
+            categories.insert(tag.clone());
         }
     }
     let mut categories: Vec<String> = categories.into_iter().collect();

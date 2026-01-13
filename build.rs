@@ -72,7 +72,6 @@ where
 
     let json = serde_json::to_string_pretty(&items).unwrap();
 
-    // Only write if content is different to prevent infinite build loops
     let should_write = match fs::read_to_string(output_path) {
         Ok(existing_content) => existing_content != json,
         Err(_) => true,
@@ -83,38 +82,62 @@ where
     }
 }
 
-fn parse_post_meta(content: &str, id: &str) -> Option<PostMeta> {
+trait Metadata {
+    fn set_id(&mut self, id: String);
+    fn get_image_url(&self) -> &str;
+    fn set_image_url(&mut self, url: String);
+}
+
+impl Metadata for PostMeta {
+    fn set_id(&mut self, id: String) {
+        self.id = id;
+    }
+    fn get_image_url(&self) -> &str {
+        &self.image_url
+    }
+    fn set_image_url(&mut self, url: String) {
+        self.image_url = url;
+    }
+}
+
+impl Metadata for ProjectMeta {
+    fn set_id(&mut self, id: String) {
+        self.id = id;
+    }
+    fn get_image_url(&self) -> &str {
+        &self.image_url
+    }
+    fn set_image_url(&mut self, url: String) {
+        self.image_url = url;
+    }
+}
+
+fn parse_meta<T: Metadata + for<'de> Deserialize<'de>>(
+    content: &str,
+    id: &str,
+    folder: &str,
+) -> Option<T> {
     let parts: Vec<&str> = content.splitn(3, "---").collect();
     if parts.len() < 3 {
         return None;
     }
-    let yaml = parts[1];
-    let mut meta: PostMeta = serde_yaml::from_str(yaml).ok()?;
-    meta.id = id.to_string();
+    let mut meta: T = serde_yaml::from_str(parts[1]).ok()?;
 
-    // Resolve relative image_url
-    if !meta.image_url.starts_with("http") && !meta.image_url.starts_with("/") {
-        let clean_img = meta.image_url.trim_start_matches("./");
-        meta.image_url = format!("content/posts/{}/{}", id, clean_img);
+    meta.set_id(id.to_string());
+
+    let img = meta.get_image_url().to_string();
+    if !img.starts_with("http") && !img.starts_with("/") {
+        let clean_img = img.trim_start_matches("./");
+        meta.set_image_url(format!("content/{}/{}/{}", folder, id, clean_img));
     }
 
     Some(meta)
 }
 
+fn parse_post_meta(content: &str, id: &str) -> Option<PostMeta> {
+    parse_meta(content, id, "posts")
+}
+
 fn parse_project_meta(content: &str, id: &str) -> Option<ProjectMeta> {
-    let parts: Vec<&str> = content.splitn(3, "---").collect();
-    if parts.len() < 3 {
-        return None;
-    }
-    let yaml = parts[1];
-    let mut meta: ProjectMeta = serde_yaml::from_str(yaml).ok()?;
-    meta.id = id.to_string();
-
-    // Resolve relative image_url
-    if !meta.image_url.starts_with("http") && !meta.image_url.starts_with("/") {
-        let clean_img = meta.image_url.trim_start_matches("./");
-        meta.image_url = format!("content/projects/{}/{}", id, clean_img);
-    }
-
-    Some(meta)
+    parse_meta(content, id, "projects")
 }
