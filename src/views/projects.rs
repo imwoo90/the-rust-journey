@@ -3,7 +3,6 @@ use crate::data::constants::APP_TITLE;
 use crate::data::projects::{derive_categories, fetch_all_projects, get_project_by_id};
 use crate::data::utils::markdown_to_html;
 use crate::hooks::use_syntax_highlighting;
-use crate::views::Footer;
 use crate::Route;
 use dioxus::prelude::*;
 
@@ -114,7 +113,6 @@ pub fn ProjectPost(id: String) -> Element {
                         CallToAction {}
                     }
                 }
-                Footer {}
             }
         }
         Some(None) => rsx! {
@@ -126,7 +124,6 @@ pub fn ProjectPost(id: String) -> Element {
                     "Back to Projects"
                 }
             }
-            Footer {}
         },
         None => rsx! {
             div { class: "flex flex-col items-center justify-center min-h-[60vh]",
@@ -135,7 +132,6 @@ pub fn ProjectPost(id: String) -> Element {
                     "Loading project info..."
                 }
             }
-            Footer {}
         },
     }
 }

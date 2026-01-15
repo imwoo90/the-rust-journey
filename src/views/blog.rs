@@ -3,7 +3,6 @@ use crate::data::blog::{derive_categories, fetch_all_posts, get_post_by_id};
 use crate::data::constants::APP_TITLE;
 use crate::data::utils::markdown_to_html;
 use crate::hooks::use_syntax_highlighting;
-use crate::views::Footer;
 use crate::Route;
 use dioxus::prelude::*;
 
@@ -101,7 +100,6 @@ pub fn BlogPost(id: String) -> Element {
                         }
                     }
                 }
-                Footer {}
             }
         }
         Some(None) => rsx! {
@@ -113,14 +111,12 @@ pub fn BlogPost(id: String) -> Element {
                     "Back to Blog"
                 }
             }
-            Footer {}
         },
         None => rsx! {
             div { class: "flex flex-col items-center justify-center min-h-[60vh]",
                 div { class: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-light" }
                 p { class: "mt-4 text-text-dark/60 dark:text-text-light/60", "Loading article..." }
             }
-            Footer {}
         },
     }
 }

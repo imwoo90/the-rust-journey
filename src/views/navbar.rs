@@ -1,4 +1,5 @@
 use crate::data::constants::{APP_TITLE, FAVICON};
+use crate::views::Footer;
 use crate::Route;
 use dioxus::prelude::*;
 
@@ -85,6 +86,7 @@ pub fn Navbar() -> Element {
             }
         }
         Outlet::<Route> {}
+        Footer {}
     }
 }
 

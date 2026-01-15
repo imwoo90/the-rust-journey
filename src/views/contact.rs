@@ -2,7 +2,6 @@ use crate::components::{Container, Hero, Input, PrimaryButton, Section, SectionT
 use crate::data::constants::{
     APP_TITLE, AUTHOR_EMAIL, AUTHOR_NAME, GITHUB_URL, GITHUB_USERNAME, LINKEDIN_URL,
 };
-use crate::views::Footer;
 use dioxus::prelude::*;
 
 #[component]
@@ -75,7 +74,6 @@ pub fn Contact() -> Element {
                 }
             }
         }
-        Footer {}
     }
 }
 

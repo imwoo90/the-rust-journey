@@ -1,6 +1,5 @@
 use crate::components::{Badge, Container, Section, SectionTitle, TimelineItem};
 use crate::data::constants::{APP_TITLE, AUTHOR_NAME};
-use crate::views::Footer;
 use dioxus::prelude::*;
 
 #[component]
@@ -81,6 +80,5 @@ pub fn About() -> Element {
                 }
             }
         }
-        Footer {}
     }
 }

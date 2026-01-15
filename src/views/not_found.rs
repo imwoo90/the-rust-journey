@@ -56,5 +56,6 @@ pub fn NotFound(segments: Vec<String>) -> Element {
                 }
             }
         }
+        crate::views::Footer {}
     }
 }

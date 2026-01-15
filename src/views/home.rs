@@ -86,7 +86,6 @@ pub fn Home() -> Element {
                     }
                 }
             }
-            Footer {}
         }
     } else {
         rsx! {
