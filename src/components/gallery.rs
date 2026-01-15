@@ -56,7 +56,7 @@ pub fn ContentGallery(
                                 }
                             }
                             CategoryFilter {
-                                categories: categories,
+                                categories,
                                 active: selected_category(),
                                 onchange: move |cat| selected_category.set(cat),
                             }

@@ -12,7 +12,9 @@ pub struct Comment {
 pub fn Comments(comments: Vec<Comment>) -> Element {
     rsx! {
         div { class: "mt-12",
-            h2 { class: "text-2xl font-bold text-text-dark dark:text-white mb-8", "Comments ({comments.len()})" }
+            h2 { class: "text-2xl font-bold text-text-dark dark:text-white mb-8",
+                "Comments ({comments.len()})"
+            }
             div { class: "space-y-6",
                 for comment in comments {
                     CommentEntry {
@@ -24,7 +26,9 @@ pub fn Comments(comments: Vec<Comment>) -> Element {
                 }
             }
             div { class: "mt-12",
-                h3 { class: "text-lg font-semibold text-text-dark dark:text-white mb-4", "Leave a comment" }
+                h3 { class: "text-lg font-semibold text-text-dark dark:text-white mb-4",
+                    "Leave a comment"
+                }
                 form { class: "space-y-4",
                     div {
                         textarea {
@@ -57,10 +61,14 @@ fn CommentEntry(author: String, date: String, avatar_url: String, text: String) 
             }
             div { class: "flex-1 bg-text-dark/5 dark:bg-[#252525] rounded-xl p-5 border border-text-dark/5 dark:border-white/5",
                 div { class: "flex justify-between items-start mb-2",
-                    p { class: "font-semibold text-text-dark dark:text-white text-sm", "{author}" }
+                    p { class: "font-semibold text-text-dark dark:text-white text-sm",
+                        "{author}"
+                    }
                     p { class: "text-xs text-text-dark/60 dark:text-gray-500", "{date}" }
                 }
-                p { class: "text-text-dark/80 dark:text-gray-300 text-sm leading-relaxed", "{text}" }
+                p { class: "text-text-dark/80 dark:text-gray-300 text-sm leading-relaxed",
+                    "{text}"
+                }
             }
         }
     }

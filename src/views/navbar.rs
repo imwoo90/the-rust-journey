@@ -92,11 +92,7 @@ pub fn Navbar() -> Element {
 fn Logo(class: Option<String>) -> Element {
     let class = class.unwrap_or_default();
     rsx! {
-        img {
-            class: "size-6 {class}",
-            src: FAVICON,
-            alt: "Logo",
-        }
+        img { class: "size-6 {class}", src: FAVICON, alt: "Logo" }
     }
 }
 

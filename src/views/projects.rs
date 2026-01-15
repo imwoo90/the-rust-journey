@@ -15,7 +15,7 @@ pub fn ProjectList() -> Element {
 
     match &*projects_guard {
         Some(projects) => {
-            let items = projects
+            let project_items = projects
                 .iter()
                 .map(|project| GalleryItem {
                     id: project.id.clone(),
@@ -31,10 +31,9 @@ pub fn ProjectList() -> Element {
                     title: "The Workshop",
                     subtitle: "Tangible milestones of my journey—a curated collection of tools, libraries, and applications forged along the road.",
                     search_placeholder: "Search projects...",
-                    items: items,
+                    items: project_items,
                     categories: derive_categories(projects),
                     route_factory: |id| Route::ProjectPost { id },
-                    centered_hero: Some(false),
                 }
             }
         }

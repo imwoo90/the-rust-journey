@@ -13,7 +13,6 @@ pub fn Contact() -> Element {
             Hero {
                 title: "Get In Touch",
                 subtitle: "Have a project in mind, a question about an article, or just want to connect? I'm always open to discussing new opportunities and collaborating on exciting ideas.",
-                children: rsx! {},
             }
 
             Section { class: "px-4 mb-20",

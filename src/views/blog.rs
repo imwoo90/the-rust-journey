@@ -15,7 +15,7 @@ pub fn BlogList() -> Element {
 
     match &*posts_guard {
         Some(posts) => {
-            let items = posts
+            let blog_items = posts
                 .iter()
                 .map(|post| GalleryItem {
                     id: post.id.clone(),
@@ -31,7 +31,7 @@ pub fn BlogList() -> Element {
                     title: "The Journey's Log",
                     subtitle: "Documenting every breakthrough and lesson learned while navigating the Rust ecosystem—from bare-metal firmware to cloud-native services.",
                     search_placeholder: "Search articles...",
-                    items: items,
+                    items: blog_items,
                     categories: derive_categories(posts),
                     route_factory: |id| Route::BlogPost { id },
                 }

@@ -63,9 +63,7 @@ pub fn Home() -> Element {
             document::Title { "{APP_TITLE}" }
             Container {
                 main { class: "flex flex-col gap-16 md:gap-24 mt-8 md:mt-16",
-                    Hero {
-                        title: "{APP_TITLE}",
-                        subtitle: "{APP_SUBTITLE}",
+                    Hero { title: "{APP_TITLE}", subtitle: "{APP_SUBTITLE}",
                         PrimaryButton { to: Route::BlogList {}, text: "Explore the Blog" }
                     }
 
