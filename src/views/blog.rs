@@ -1,4 +1,6 @@
-use crate::components::{Comment, Comments, ContentGallery, DetailHero, GalleryItem, ShareButtons};
+use crate::components::{
+    Comment, Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory, ShareButtons,
+};
 use crate::data::blog::{derive_categories, fetch_all_posts, get_post_by_id};
 use crate::data::constants::APP_TITLE;
 use crate::data::utils::markdown_to_html;
@@ -32,7 +34,7 @@ pub fn BlogList() -> Element {
                     search_placeholder: "Search articles...",
                     items: blog_items,
                     categories: derive_categories(posts),
-                    route_factory: |id| Route::BlogPost { id },
+                    route_factory: RouteFactory(|id| Route::BlogPost { id }),
                 }
             }
         }

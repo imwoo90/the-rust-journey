@@ -1,4 +1,6 @@
-use crate::components::{CallToAction, Comment, Comments, ContentGallery, DetailHero, GalleryItem};
+use crate::components::{
+    CallToAction, Comment, Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory,
+};
 use crate::data::constants::APP_TITLE;
 use crate::data::projects::{derive_categories, fetch_all_projects, get_project_by_id};
 use crate::data::utils::markdown_to_html;
@@ -32,7 +34,7 @@ pub fn ProjectList() -> Element {
                     search_placeholder: "Search projects...",
                     items: project_items,
                     categories: derive_categories(projects),
-                    route_factory: |id| Route::ProjectPost { id },
+                    route_factory: RouteFactory(|id| Route::ProjectPost { id }),
                 }
             }
         }

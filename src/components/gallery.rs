@@ -12,6 +12,18 @@ pub struct GalleryItem {
     pub tags: Vec<String>,
 }
 
+#[derive(Clone)]
+pub struct RouteFactory(pub fn(String) -> Route);
+
+impl PartialEq for RouteFactory {
+    fn eq(&self, _other: &Self) -> bool {
+        // Function pointers are not reliably comparable for equality.
+        // We assume they don't change for the same component instance or we accept potential missed updates.
+        // In this app, route factories are static closures/functions.
+        true
+    }
+}
+
 #[component]
 pub fn ContentGallery(
     title: String,
@@ -19,7 +31,7 @@ pub fn ContentGallery(
     search_placeholder: String,
     items: Vec<GalleryItem>,
     categories: Vec<String>,
-    route_factory: fn(String) -> Route,
+    route_factory: RouteFactory,
     centered_hero: Option<bool>,
 ) -> Element {
     let mut search_query = use_signal(|| "".to_string());
@@ -71,7 +83,7 @@ pub fn ContentGallery(
                             description: item.description.clone(),
                             image_url: format!("{}/{}", get_base_path(), item.image_url),
                             tags: item.tags.clone(),
-                            link_to: route_factory(item.id.clone()),
+                            link_to: (route_factory.0)(item.id.clone()),
                         }
                     }
                 }

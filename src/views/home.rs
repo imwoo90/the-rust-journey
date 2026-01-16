@@ -3,7 +3,6 @@ use crate::data::blog::fetch_all_posts;
 use crate::data::constants::{APP_SUBTITLE, APP_TITLE};
 use crate::data::projects::fetch_all_projects;
 use crate::data::utils::get_base_path;
-use crate::views::Footer;
 use crate::Route;
 use dioxus::prelude::*;
 
