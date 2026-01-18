@@ -78,28 +78,29 @@ pub fn BlogPost(id: String) -> Element {
                             dangerous_inner_html: "{html_content}",
                         }
 
-                        ShareButtons {}
+                    // Not implemented yet
+                    // ShareButtons {}
 
-                        Comments {
-                            comments: vec![
-                                Comment {
-                                    author: "Jane Cooper".to_string(),
-                                    date: "2 days ago".to_string(),
-                                    avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuATXU3JICms3OyNaZoVJNBpQGSqHbZXsY_slYkES2kANBTg2xB5sbEPC3DKz8hzBeoWeltrZouk9CE0hhlOFTusx7U27zIwssg-p4QLxBnxA_OSsCENLJL4PCYznC96ITW0l2xQeE6GXJ9_W47v_SekUzEdYhCdt-QanimUOBY9OtFM4a3imFZ5MMdRhY-tPvVhM2MSKpiVcDNWpCExdlaNFRyP4Sa-KFvTXyibaDzjq9ZhrXVuSRqFPOUT4Zv22es5AZFco4KpaBj7"
-                                        .to_string(),
-                                    text: "Great article! I was just looking for a good starting point for Rust on embedded. The code snippet is super helpful."
-                                        .to_string(),
-                                },
-                                Comment {
-                                    author: "Robert Fox".to_string(),
-                                    date: "1 day ago".to_string(),
-                                    avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDucCURr32vwk41SdPofChh366sYzCkTMbv54gXm4lSWHQJdtJ2D341xf2qNZsIPM5oRjhBiULSxUfw2niGWlvHJOc72JArrLVdeylR7_QYduC2mvhBPwvZQoab83iys3HTJ_QBaWFWteNyXnCdmugcXK4PhVmq02ZLeD1ikjZJyJ4HoxNi7ene8vpXwM7yT3OE_C1JFe4hMA5t1hRdhJ2bxMTiy8Q1M6tT1fxQOTtW_-7XXKfNaywMDBRLmi8NxOTLzh0c05zLCzba"
-                                        .to_string(),
-                                    text: "Thanks for this! Could you do a follow-up on setting up a debugger with VS Code and probe-rs?"
-                                        .to_string(),
-                                },
-                            ],
-                        }
+                    // Comments {
+                    //     comments: vec![
+                    //         Comment {
+                    //             author: "Jane Cooper".to_string(),
+                    //             date: "2 days ago".to_string(),
+                    //             avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuATXU3JICms3OyNaZoVJNBpQGSqHbZXsY_slYkES2kANBTg2xB5sbEPC3DKz8hzBeoWeltrZouk9CE0hhlOFTusx7U27zIwssg-p4QLxBnxA_OSsCENLJL4PCYznC96ITW0l2xQeE6GXJ9_W47v_SekUzEdYhCdt-QanimUOBY9OtFM4a3imFZ5MMdRhY-tPvVhM2MSKpiVcDNWpCExdlaNFRyP4Sa-KFvTXyibaDzjq9ZhrXVuSRqFPOUT4Zv22es5AZFco4KpaBj7"
+                    //                 .to_string(),
+                    //             text: "Great article! I was just looking for a good starting point for Rust on embedded. The code snippet is super helpful."
+                    //                 .to_string(),
+                    //         },
+                    //         Comment {
+                    //             author: "Robert Fox".to_string(),
+                    //             date: "1 day ago".to_string(),
+                    //             avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDucCURr32vwk41SdPofChh366sYzCkTMbv54gXm4lSWHQJdtJ2D341xf2qNZsIPM5oRjhBiULSxUfw2niGWlvHJOc72JArrLVdeylR7_QYduC2mvhBPwvZQoab83iys3HTJ_QBaWFWteNyXnCdmugcXK4PhVmq02ZLeD1ikjZJyJ4HoxNi7ene8vpXwM7yT3OE_C1JFe4hMA5t1hRdhJ2bxMTiy8Q1M6tT1fxQOTtW_-7XXKfNaywMDBRLmi8NxOTLzh0c05zLCzba"
+                    //                 .to_string(),
+                    //             text: "Thanks for this! Could you do a follow-up on setting up a debugger with VS Code and probe-rs?"
+                    //                 .to_string(),
+                    //         },
+                    //     ],
+                    // }
                     }
                 }
             }

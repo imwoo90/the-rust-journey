@@ -91,28 +91,29 @@ pub fn ProjectPost(id: String) -> Element {
                             }
                         }
 
-                        Comments {
-                            comments: vec![
-                                Comment {
-                                    author: "Alice".to_string(),
-                                    date: "2 days ago".to_string(),
-                                    avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAKTYnKgoWMM15UTvOugoMXvYWs9d-Yo9RCvP6v_ilmnnp8-_OLVqoz1-1AXhD1nNrSq9Z6DfjYY84gVr6eNvJB9O-GYThPTVr5TKapPERZQYYJqdPdks41NivF_GEpX82s4WZ3YZR39bKzgBc7MnkRyKSpauNcQoLJE1pg6IgE5PeMQOMCD0-4TATNGCc_JqpTcEdqQl_9Xelzn2FMFigdAiJ3_Vlsl9CvsliwUySKm-99ilP7IdYUSYQ0v9A6FapxMTzVqSRGWpI7"
-                                        .to_string(),
-                                    text: "This is an incredible write-up. The performance gains you've achieved by using Rust and Wasm are seriously impressive. I've been considering a similar approach for a project, and this post just convinced me. Great work!"
-                                        .to_string(),
-                                },
-                                Comment {
-                                    author: "Bob".to_string(),
-                                    date: "1 day ago".to_string(),
-                                    avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBBY54kL1b9FE1c05fMLGziuoEeOH4QsqnruT9ad7rlIs0rLWzKrS_Z9-RWZkSuiCXnRcqQS5Rt2JoqkiKOL6VQSYzlHEl35OgBa9EOvwBmD5ypYtvZyL9nfx7eKDMA5PDHBV1Rf2ROcDvuF7FABBmdLvY4qL1tG20C_4JssGJPKbDdANUcfv11LJL_8s-67IVXzTFr2uo3ApFtU-PxGgkRp3IhLgB8AlonuubXq7sMAgiS8-BZq3EyMP3qr2pbtOYx7fz15rmwrsHX"
-                                        .to_string(),
-                                    text: "Fascinating project. I'm curious about the bundle size. How did you manage to keep it small enough for a good web experience? Any tips on optimizing the Wasm binary?"
-                                        .to_string(),
-                                },
-                            ],
-                        }
+                    // Not implemented yet
+                    // Comments {
+                    //     comments: vec![
+                    //         Comment {
+                    //             author: "Alice".to_string(),
+                    //             date: "2 days ago".to_string(),
+                    //             avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAKTYnKgoWMM15UTvOugoMXvYWs9d-Yo9RCvP6v_ilmnnp8-_OLVqoz1-1AXhD1nNrSq9Z6DfjYY84gVr6eNvJB9O-GYThPTVr5TKapPERZQYYJqdPdks41NivF_GEpX82s4WZ3YZR39bKzgBc7MnkRyKSpauNcQoLJE1pg6IgE5PeMQOMCD0-4TATNGCc_JqpTcEdqQl_9Xelzn2FMFigdAiJ3_Vlsl9CvsliwUySKm-99ilP7IdYUSYQ0v9A6FapxMTzVqSRGWpI7"
+                    //                 .to_string(),
+                    //             text: "This is an incredible write-up. The performance gains you've achieved by using Rust and Wasm are seriously impressive. I've been considering a similar approach for a project, and this post just convinced me. Great work!"
+                    //                 .to_string(),
+                    //         },
+                    //         Comment {
+                    //             author: "Bob".to_string(),
+                    //             date: "1 day ago".to_string(),
+                    //             avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBBY54kL1b9FE1c05fMLGziuoEeOH4QsqnruT9ad7rlIs0rLWzKrS_Z9-RWZkSuiCXnRcqQS5Rt2JoqkiKOL6VQSYzlHEl35OgBa9EOvwBmD5ypYtvZyL9nfx7eKDMA5PDHBV1Rf2ROcDvuF7FABBmdLvY4qL1tG20C_4JssGJPKbDdANUcfv11LJL_8s-67IVXzTFr2uo3ApFtU-PxGgkRp3IhLgB8AlonuubXq7sMAgiS8-BZq3EyMP3qr2pbtOYx7fz15rmwrsHX"
+                    //                 .to_string(),
+                    //             text: "Fascinating project. I'm curious about the bundle size. How did you manage to keep it small enough for a good web experience? Any tips on optimizing the Wasm binary?"
+                    //                 .to_string(),
+                    //         },
+                    //     ],
+                    // }
 
-                        CallToAction {}
+                    // CallToAction {}
                     }
                 }
             }
