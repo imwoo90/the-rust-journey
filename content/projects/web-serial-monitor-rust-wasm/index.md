@@ -1,19 +1,19 @@
 ---
-title: "Web Serial Monitor (Rust/WASM)"
+title: "RusTerm (Web Serial Monitor)"
 date: "2026-01-18"
 author: "imwoo90"
 description: "A high-performance, installation-free Serial Monitor running entirely in the browser. Features OPFS storage, virtual scrolling, and custom baud rates using WebAssembly."
 image_url: "web_serial_monitor_project.png"
 tags: ["rust", "dioxus", "wasm", "web-serial", "opfs", "terminal", "serial"]
-link: "https://github.com/imwoo90/web_serial_monitor"
+link: "https://github.com/imwoo90/rusterm"
 link_text: "View Source"
 ---
 
-# 📡 Browser-Based Serial Monitor
+# 📡 RusTerm: Browser-Based Serial Monitor
 
 This project reimagines the traditional desktop serial monitor as a powerful, zero-installation web application. Built with **Rust (Dioxus)** and **WebAssembly**, it challenges the limits of browser capabilities by handling high-frequency hardware data streams without performance degradation.
 
-## 🚀 Why Use This Monitor?
+## 🚀 Why Use RusTerm?
 
 - **Zero Installation**: Access a full-featured serial monitor from any Chrome/Edge browser instantly. No drivers, no installers.
 - **Native Performance**: Leverages **Web Workers** for multi-threaded processing and **OPFS (Origin Private File System)** to handle gigabyte-scale logs without memory issues.
@@ -36,8 +36,8 @@ While the application is architected in Rust, the extreme performance requiremen
 
 ## 📦 How to Run
 
-### Live Demo
-[https://imwoo90.github.io/web_serial_monitor/](https://imwoo90.github.io/web_serial_monitor/)
+### Launch RusTerm
+[https://imwoo90.github.io/RusTerm/](https://imwoo90.github.io/RusTerm/)
 
 ### Local Development
 1.  Clone the repository.
