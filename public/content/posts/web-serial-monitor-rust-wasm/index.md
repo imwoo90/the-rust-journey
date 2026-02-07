@@ -13,7 +13,7 @@ This question sparked a journey that pushed the boundaries of what I thought was
 
 No installers. No drivers. Just a URL.
 
-But to achieve this, I had to break the rules of web development. Here is the story of how Rust, WebAssembly, and a team of AI agents helped me build the **Web Serial Monitor**.
+But to achieve this, I had to break the rules of web development. Here is the story of how Rust, WebAssembly, and a team of AI agents helped me build **RusTerm**.
 
 ## The Challenge: Native Performance in a Sandbox
 
@@ -95,9 +95,9 @@ Building this monitor expanded my understanding of:
 -   **Rust's Ownership**: How it keeps architecture clean, even in a distributed WASM environment.
 -   **Stream Processing**: How to handle infinite data without infinite memory.
 
-If you are tired of installing serial drivers, try the live demo here: [Web Serial Monitor](https://imwoo90.github.io/web_serial_monitor/).
+If you are tired of installing serial drivers, try the official app here: [RusTerm](https://imwoo90.github.io/RusTerm/).
 
 The journey implies that the web is ready for embedded development. And I'm just getting started.
 
 ---
-*Check out the [Project Source Code](https://github.com/imwoo90/web_serial_monitor) to see the code behind the story.*
+*Check out the [Project Source Code](https://github.com/imwoo90/rusterm) to see the code behind the story.*
