@@ -5,9 +5,11 @@ author: "imwoo90"
 description: "A deep dive into my second major Rust project: engineering a high-performance, installation-free Serial Monitor using Dioxus, Web Workers, and OPFS."
 image_url: "web_serial_monitor_cover.png"
 tags: ["rust", "dioxus", "wasm", "web-serial", "opfs", "terminal", "serial"]
+series: "RusTerm"
+series_order: 1
 ---
 
-"Why do I need to install a 500MB driver just to read `Hello World` from a microcontroller?"
+"Why do I have to go through the friction of installing and configuring drivers just to read `Hello World` from a microcontroller?"
 
 This question sparked a journey that pushed the boundaries of what I thought was possible in a web browser. As an embedded developer, I've spent countless hours wrestling with fragmented desktop serial monitors. My dream was simple yet audacious: **A Serial Monitor that runs instantly in Chrome, handles gigabytes of logs, and feels as snappy as a native C++ app.**
 
