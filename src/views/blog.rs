@@ -1,7 +1,5 @@
-use crate::components::{
-    Comment, Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory, ShareButtons,
-};
-use crate::data::blog::{derive_categories, fetch_all_posts, get_post_by_id};
+use crate::components::{ContentGallery, DetailHero, GalleryItem, RouteFactory};
+use crate::data::blog::{derive_categories, fetch_all_posts, get_post_by_id, Post};
 use crate::data::constants::APP_TITLE;
 use crate::data::utils::markdown_to_html;
 use crate::hooks::use_syntax_highlighting;
@@ -49,8 +47,13 @@ pub fn BlogList() -> Element {
 
 #[component]
 pub fn BlogPost(id: String) -> Element {
+    let mut current_id = use_signal(|| id.clone());
+    if current_id() != id {
+        current_id.set(id.clone());
+    }
+
     let post_resource = use_resource(move || {
-        let id = id.clone();
+        let id = current_id();
         async move { get_post_by_id(&id).await }
     });
 
@@ -78,29 +81,7 @@ pub fn BlogPost(id: String) -> Element {
                             dangerous_inner_html: "{html_content}",
                         }
 
-                    // Not implemented yet
-                    // ShareButtons {}
-
-                    // Comments {
-                    //     comments: vec![
-                    //         Comment {
-                    //             author: "Jane Cooper".to_string(),
-                    //             date: "2 days ago".to_string(),
-                    //             avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuATXU3JICms3OyNaZoVJNBpQGSqHbZXsY_slYkES2kANBTg2xB5sbEPC3DKz8hzBeoWeltrZouk9CE0hhlOFTusx7U27zIwssg-p4QLxBnxA_OSsCENLJL4PCYznC96ITW0l2xQeE6GXJ9_W47v_SekUzEdYhCdt-QanimUOBY9OtFM4a3imFZ5MMdRhY-tPvVhM2MSKpiVcDNWpCExdlaNFRyP4Sa-KFvTXyibaDzjq9ZhrXVuSRqFPOUT4Zv22es5AZFco4KpaBj7"
-                    //                 .to_string(),
-                    //             text: "Great article! I was just looking for a good starting point for Rust on embedded. The code snippet is super helpful."
-                    //                 .to_string(),
-                    //         },
-                    //         Comment {
-                    //             author: "Robert Fox".to_string(),
-                    //             date: "1 day ago".to_string(),
-                    //             avatar_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDucCURr32vwk41SdPofChh366sYzCkTMbv54gXm4lSWHQJdtJ2D341xf2qNZsIPM5oRjhBiULSxUfw2niGWlvHJOc72JArrLVdeylR7_QYduC2mvhBPwvZQoab83iys3HTJ_QBaWFWteNyXnCdmugcXK4PhVmq02ZLeD1ikjZJyJ4HoxNi7ene8vpXwM7yT3OE_C1JFe4hMA5t1hRdhJ2bxMTiy8Q1M6tT1fxQOTtW_-7XXKfNaywMDBRLmi8NxOTLzh0c05zLCzba"
-                    //                 .to_string(),
-                    //             text: "Thanks for this! Could you do a follow-up on setting up a debugger with VS Code and probe-rs?"
-                    //                 .to_string(),
-                    //         },
-                    //     ],
-                    // }
+                        SeriesNavigation { current_post: post.clone() }
                     }
                 }
             }
@@ -122,4 +103,94 @@ pub fn BlogPost(id: String) -> Element {
             }
         },
     }
+}
+
+#[component]
+fn SeriesNavigation(current_post: Post) -> Element {
+    let posts_resource = use_resource(fetch_all_posts);
+    let posts_guard = posts_resource.read();
+
+    if let (Some(series_name), Some(posts)) =
+        (current_post.meta.series.as_ref(), posts_guard.as_ref())
+    {
+        // 1. 같은 시리즈 글들만 필터링
+        let mut series_posts: Vec<_> = posts
+            .iter()
+            .filter(|p| p.series.as_ref() == Some(series_name))
+            .collect();
+
+        // 2. series_order 기준으로 오름차순 정렬 (기본값 0)
+        series_posts.sort_by_key(|p| p.series_order.unwrap_or(0));
+
+        // 3. 현재 글의 위치(인덱스) 찾기
+        if let Some(current_index) = series_posts
+            .iter()
+            .position(|p| p.id == current_post.meta.id)
+        {
+            // 연재물이 2개 이상일 때만 표시
+            if series_posts.len() < 2 {
+                return rsx! { "" };
+            }
+
+            let prev_post = if current_index > 0 {
+                series_posts.get(current_index - 1)
+            } else {
+                None
+            };
+
+            let next_post = if current_index < series_posts.len() - 1 {
+                series_posts.get(current_index + 1)
+            } else {
+                None
+            };
+
+            return rsx! {
+                div { class: "mt-12 pt-8 border-t border-text-dark/10 dark:border-text-light/10",
+                    div { class: "flex flex-col gap-4",
+                        h3 { class: "text-sm font-semibold uppercase tracking-wider text-text-dark/50 dark:text-text-light/50",
+                            "More from: {series_name}"
+                        }
+                        div { class: "grid grid-cols-1 sm:grid-cols-2 gap-4",
+                            // Previous Card
+                            if let Some(prev) = prev_post {
+                                Link {
+                                    to: Route::BlogPost { id: prev.id.clone() },
+                                    class: "group flex flex-col p-4 rounded-xl border border-text-dark/10 dark:border-text-light/10 hover:border-primary-light transition-all duration-300",
+                                    span { class: "text-xs text-text-dark/60 dark:text-text-light/60 mb-1 flex items-center gap-1",
+                                        span { class: "material-symbols-outlined text-[14px]", "arrow_back" }
+                                        "Previous"
+                                    }
+                                    span { class: "font-medium group-hover:text-primary-light transition-colors line-clamp-1",
+                                        "{prev.title}"
+                                    }
+                                }
+                            } else {
+                                // 이전 글이 없으면 빈 공간 유지 (레이아웃 정렬용)
+                                div { class: "hidden sm:block" }
+                            }
+
+                            // Next Card
+                            if let Some(next) = next_post {
+                                Link {
+                                    to: Route::BlogPost { id: next.id.clone() },
+                                    class: "group flex flex-col p-4 rounded-xl border border-text-dark/10 dark:border-text-light/10 hover:border-primary-light transition-all duration-300 items-end text-right",
+                                    span { class: "text-xs text-text-dark/60 dark:text-text-light/60 mb-1 flex items-center gap-1",
+                                        "Next"
+                                        span { class: "material-symbols-outlined text-[14px]", "arrow_forward" }
+                                    }
+                                    span { class: "font-medium group-hover:text-primary-light transition-colors line-clamp-1",
+                                        "{next.title}"
+                                    }
+                                }
+                            } else {
+                                div { class: "hidden sm:block" }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+    }
+
+    rsx! { "" }
 }

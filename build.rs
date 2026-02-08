@@ -12,6 +12,8 @@ struct PostMeta {
     description: String,
     image_url: String,
     tags: Vec<String>,
+    series: Option<String>,
+    series_order: Option<i32>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

@@ -1,6 +1,4 @@
-use crate::components::{
-    CallToAction, Comment, Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory,
-};
+use crate::components::{ContentGallery, DetailHero, GalleryItem, RouteFactory};
 use crate::data::constants::APP_TITLE;
 use crate::data::projects::{derive_categories, fetch_all_projects, get_project_by_id};
 use crate::data::utils::markdown_to_html;
@@ -49,8 +47,13 @@ pub fn ProjectList() -> Element {
 
 #[component]
 pub fn ProjectPost(id: String) -> Element {
+    let mut current_id = use_signal(|| id.clone());
+    if current_id() != id {
+        current_id.set(id.clone());
+    }
+
     let project_resource = use_resource(move || {
-        let id = id.clone();
+        let id = current_id();
         async move { get_project_by_id(&id).await }
     });
 

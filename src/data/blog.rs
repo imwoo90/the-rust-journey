@@ -12,6 +12,8 @@ pub struct PostMeta {
     pub description: String,
     pub image_url: String,
     pub tags: Vec<String>,
+    pub series: Option<String>,
+    pub series_order: Option<i32>,
 }
 
 /// A complete blog post including metadata and markdown content.
