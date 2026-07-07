@@ -1,24 +1,17 @@
 use pulldown_cmark::{html, Event, Options, Parser, Tag};
 use serde::{Deserialize, Serialize};
 
-/// Dynamically detects the base path from the <base> tag in the HTML.
-/// This allows the same code to work in both local 'dx serve' (usually /)
-/// and GitHub Pages (usually /repo_name/).
 pub fn get_base_path() -> String {
-    #[cfg(target_arch = "wasm32")]
-    {
-        if let Some(window) = web_sys::window() {
-            if let Some(document) = window.document() {
-                if let Ok(Some(base_element)) = document.query_selector("base") {
-                    if let Some(href) = base_element.get_attribute("href") {
-                        // href is often "/repo_name/" - we want to trim the trailing slash
-                        return href.trim_end_matches('/').to_string();
-                    }
-                }
-            }
+    if let Some(base_path) = dioxus_cli_config::base_path() {
+        let base_path = base_path.trim_matches('/');
+        if base_path.is_empty() {
+            "".to_string()
+        } else {
+            format!("/{}", base_path)
         }
+    } else {
+        "".to_string()
     }
-    "".to_string()
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
