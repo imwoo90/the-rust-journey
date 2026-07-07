@@ -39,7 +39,7 @@ enum Route {
 
 const MAIN_CSS: Asset = asset!("assets/tailwind.css");
 
-#[server(endpoint = "static_routes", output = server_fn::codec::Json)]
+#[server(endpoint = "static_routes")]
 pub async fn static_routes() -> Result<Vec<String>, ServerFnError> {
     println!("static_routes called. Cwd: {:?}", std::env::current_dir());
     let mut routes = vec![
