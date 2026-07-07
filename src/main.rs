@@ -111,7 +111,7 @@ fn main() {
         let serve_cfg = dioxus::server::ServeConfig::builder()
             .incremental(incremental_cfg);
 
-        dioxus::LaunchBuilder::new()
+        dioxus::LaunchBuilder::server()
             .with_cfg(serve_cfg)
             .launch(App);
     }
