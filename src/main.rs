@@ -92,33 +92,62 @@ pub async fn static_routes() -> Result<Vec<String>, ServerFnError> {
     Ok(routes)
 }
 
+#[cfg(feature = "server")]
+async fn strip_base_path(
+    mut req: axum::http::Request<axum::body::Body>,
+    next: axum::middleware::Next,
+) -> axum::response::Response {
+    let uri = req.uri().clone();
+    let path = uri.path().to_string();
+    if path.starts_with("/the-rust-journey") {
+        let new_path = &path["/the-rust-journey".len()..];
+        let new_path = if new_path.is_empty() { "/" } else { new_path };
+        let mut parts = uri.into_parts();
+        let query = parts.path_and_query.as_ref().and_then(|pq| pq.query()).unwrap_or("");
+        let new_pq = if query.is_empty() {
+            new_path.to_string()
+        } else {
+            format!("{}?{}", new_path, query)
+        };
+        parts.path_and_query = Some(new_pq.parse().unwrap());
+        *req.uri_mut() = axum::http::Uri::from_parts(parts).unwrap();
+    }
+    next.run(req).await
+}
+
+#[cfg(feature = "server")]
+#[tokio::main]
+async fn main() {
+    let static_dir = std::env::var("DIOXUS_PUBLIC_PATH")
+        .map(std::path::PathBuf::from)
+        .ok()
+        .or_else(|| {
+            std::env::current_exe()
+                .ok()
+                .and_then(|p| p.parent().map(|parent| parent.join("public")))
+        })
+        .unwrap_or_else(|| std::path::PathBuf::from("./public"));
+    
+    let incremental_cfg = dioxus::server::IncrementalRendererConfig::new()
+        .static_dir(static_dir);
+
+    let serve_cfg = dioxus::server::ServeConfig::builder()
+        .incremental(incremental_cfg);
+
+    let addr = dioxus_cli_config::fullstack_address_or_localhost();
+    
+    use dioxus::server::DioxusRouterExt;
+    let router = axum::Router::new()
+        .serve_dioxus_application(serve_cfg.clone(), App)
+        .layer(axum::middleware::from_fn(strip_base_path));
+
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    axum::serve(listener, router).await.unwrap();
+}
+
+#[cfg(not(feature = "server"))]
 fn main() {
-    #[cfg(feature = "server")]
-    {
-        let static_dir = std::env::var("DIOXUS_PUBLIC_PATH")
-            .map(std::path::PathBuf::from)
-            .ok()
-            .or_else(|| {
-                std::env::current_exe()
-                    .ok()
-                    .and_then(|p| p.parent().map(|parent| parent.join("public")))
-            })
-            .unwrap_or_else(|| std::path::PathBuf::from("./public"));
-        
-        let incremental_cfg = dioxus::server::IncrementalRendererConfig::new()
-            .static_dir(static_dir);
-
-        let serve_cfg = dioxus::server::ServeConfig::builder()
-            .incremental(incremental_cfg);
-
-        dioxus::LaunchBuilder::server()
-            .with_cfg(serve_cfg)
-            .launch(App);
-    }
-    #[cfg(not(feature = "server"))]
-    {
-        dioxus::launch(App);
-    }
+    dioxus::launch(App);
 }
 
 /// Detect initial theme (Pure Rust abstraction)

@@ -3416,13 +3416,16 @@ dependencies = [
 name = "my_blog"
 version = "0.1.0"
 dependencies = [
+ "axum",
  "dioxus",
+ "dioxus-cli-config",
  "gloo-net",
  "include_dir",
  "pulldown-cmark",
  "serde",
  "serde_json",
  "serde_yaml",
+ "tokio",
  "web-sys",
 ]
 
@@ -5412,7 +5415,9 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
+ "parking_lot",
  "pin-project-lite",
+ "signal-hook-registry",
  "socket2",
  "tokio-macros",
  "windows-sys 0.61.2",

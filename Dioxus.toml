@@ -1,7 +1,7 @@
 [application]
 
 [web.app]
-base_path = ""
+base_path = "the-rust-journey"
 
 # HTML title tag content
 title = "Rust's Horizon - A Developer's Blog"
