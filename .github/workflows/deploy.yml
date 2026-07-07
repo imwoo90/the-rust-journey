@@ -38,9 +38,11 @@ jobs:
           
           # Clean up /./ dots and prepend REPO_NAME to absolute asset/route URLs
           REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
-          find docs -name "*.html" -exec sed -i "s|/./|/|g" {} \;
+          find docs -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i "s|/./|/|g" {} \;
           find docs -name "*.html" -exec sed -i "s|href=\"/|href=\"/$REPO_NAME/|g" {} \;
           find docs -name "*.html" -exec sed -i "s|src=\"/|src=\"/$REPO_NAME/|g" {} \;
+          find docs -name "*.js" -exec sed -i "s|/assets/|/$REPO_NAME/assets/|g" {} \;
+          find docs -name "*.js" -exec sed -i "s|/wasm/|/$REPO_NAME/wasm/|g" {} \;
           
           # Manually inject <base> tag into all pre-rendered HTML files (Crucial for GitHub Pages)
           find docs -name "*.html" -exec sed -i "s|<head>|<head><base href=\"/$REPO_NAME/\">|" {} \;
