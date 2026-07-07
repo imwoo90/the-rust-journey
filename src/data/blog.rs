@@ -32,14 +32,30 @@ impl Post {
 
 /// Fetches all blog posts metadata from the server, sorted by date descending.
 pub async fn fetch_all_posts() -> Vec<PostMeta> {
-    let url = format!("{}/content/posts_index.json", get_base_path());
-    let mut posts: Vec<PostMeta> = match gloo_net::http::Request::get(&url).send().await {
-        Ok(resp) => resp.json().await.unwrap_or_default(),
-        Err(_) => Vec::new(),
-    };
-    // Sort by date descending
-    posts.sort_by(|a, b| b.date.cmp(&a.date));
-    posts
+    #[cfg(target_arch = "wasm32")]
+    {
+        let url = format!("{}/content/posts_index.json", get_base_path());
+        let mut posts: Vec<PostMeta> = match gloo_net::http::Request::get(&url).send().await {
+            Ok(resp) => resp.json().await.unwrap_or_default(),
+            Err(_) => Vec::new(),
+        };
+        // Sort by date descending
+        posts.sort_by(|a, b| b.date.cmp(&a.date));
+        posts
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let index_path = manifest_dir.join("public/content/posts_index.json");
+        if index_path.exists() {
+            let content = std::fs::read_to_string(index_path).unwrap_or_default();
+            let mut posts: Vec<PostMeta> = serde_json::from_str(&content).unwrap_or_default();
+            posts.sort_by(|a, b| b.date.cmp(&a.date));
+            posts
+        } else {
+            Vec::new()
+        }
+    }
 }
 
 /// Derives unique categories from a list of posts.
@@ -57,13 +73,27 @@ pub fn derive_categories(posts: &[PostMeta]) -> Vec<String> {
 
 /// Fetches a specific blog post by its ID from the server.
 pub async fn get_post_by_id(id: &str) -> Option<Post> {
-    let url = format!("{}/content/posts/{}/index.md", get_base_path(), id);
-    let content = match gloo_net::http::Request::get(&url).send().await {
-        Ok(resp) => resp.text().await.ok()?,
-        Err(_) => return None,
-    };
+    #[cfg(target_arch = "wasm32")]
+    {
+        let url = format!("{}/content/posts/{}/index.md", get_base_path(), id);
+        let content = match gloo_net::http::Request::get(&url).send().await {
+            Ok(resp) => resp.text().await.ok()?,
+            Err(_) => return None,
+        };
 
-    parse_markdown(&content, id.to_string()).ok()
+        parse_markdown(&content, id.to_string()).ok()
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let path = manifest_dir.join(format!("public/content/posts/{}/index.md", id));
+        if path.exists() {
+            let content = std::fs::read_to_string(path).ok()?;
+            parse_markdown(&content, id.to_string()).ok()
+        } else {
+            None
+        }
+    }
 }
 
 fn parse_markdown(content: &str, id: String) -> Result<Post, String> {

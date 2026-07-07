@@ -8,13 +8,13 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn Home() -> Element {
-    let posts_resource = use_resource(fetch_all_posts);
-    let projects_resource = use_resource(fetch_all_projects);
+    let posts_res = use_server_future(fetch_all_posts)?;
+    let projects_res = use_server_future(fetch_all_projects)?;
 
-    let posts = posts_resource.read();
-    let projects = projects_resource.read();
+    let posts_guard = posts_res.read();
+    let projects_guard = projects_res.read();
 
-    if let (Some(posts), Some(projects)) = (&*posts, &*projects) {
+    if let (Some(posts), Some(projects)) = (posts_guard.as_ref(), projects_guard.as_ref()) {
         // Create a unified list of recent items using iterators
         let mut recent_items: Vec<_> = posts
             .iter()

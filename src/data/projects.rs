@@ -33,14 +33,30 @@ impl Project {
 
 /// Fetches all projects metadata from the server, sorted by date descending.
 pub async fn fetch_all_projects() -> Vec<ProjectMeta> {
-    let url = format!("{}/content/projects_index.json", get_base_path());
-    let mut projects: Vec<ProjectMeta> = match gloo_net::http::Request::get(&url).send().await {
-        Ok(resp) => resp.json().await.unwrap_or_default(),
-        Err(_) => Vec::new(),
-    };
-    // Sort by date descending
-    projects.sort_by(|a, b| b.date.cmp(&a.date));
-    projects
+    #[cfg(target_arch = "wasm32")]
+    {
+        let url = format!("{}/content/projects_index.json", get_base_path());
+        let mut projects: Vec<ProjectMeta> = match gloo_net::http::Request::get(&url).send().await {
+            Ok(resp) => resp.json().await.unwrap_or_default(),
+            Err(_) => Vec::new(),
+        };
+        // Sort by date descending
+        projects.sort_by(|a, b| b.date.cmp(&a.date));
+        projects
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let index_path = manifest_dir.join("public/content/projects_index.json");
+        if index_path.exists() {
+            let content = std::fs::read_to_string(index_path).unwrap_or_default();
+            let mut projects: Vec<ProjectMeta> = serde_json::from_str(&content).unwrap_or_default();
+            projects.sort_by(|a, b| b.date.cmp(&a.date));
+            projects
+        } else {
+            Vec::new()
+        }
+    }
 }
 
 /// Derives unique categories from a list of projects.
@@ -58,13 +74,27 @@ pub fn derive_categories(projects: &[ProjectMeta]) -> Vec<String> {
 
 /// Fetches a specific project by its ID from the server.
 pub async fn get_project_by_id(id: &str) -> Option<Project> {
-    let url = format!("{}/content/projects/{}/index.md", get_base_path(), id);
-    let content = match gloo_net::http::Request::get(&url).send().await {
-        Ok(resp) => resp.text().await.ok()?,
-        Err(_) => return None,
-    };
+    #[cfg(target_arch = "wasm32")]
+    {
+        let url = format!("{}/content/projects/{}/index.md", get_base_path(), id);
+        let content = match gloo_net::http::Request::get(&url).send().await {
+            Ok(resp) => resp.text().await.ok()?,
+            Err(_) => return None,
+        };
 
-    parse_project_full(&content, id.to_string()).ok()
+        parse_project_full(&content, id.to_string()).ok()
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let path = manifest_dir.join(format!("public/content/projects/{}/index.md", id));
+        if path.exists() {
+            let content = std::fs::read_to_string(path).ok()?;
+            parse_project_full(&content, id.to_string()).ok()
+        } else {
+            None
+        }
+    }
 }
 
 fn parse_project_full(content: &str, id: String) -> Result<Project, String> {

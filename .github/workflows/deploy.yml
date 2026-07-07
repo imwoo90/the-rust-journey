@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Dioxus CLI
         run: |
-          curl -L https://github.com/DioxusLabs/dioxus/releases/download/v0.7.2/dx-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+          curl -L https://github.com/DioxusLabs/dioxus/releases/download/v0.7.9/dx-x86_64-unknown-linux-gnu.tar.gz | tar -xz
           chmod +x dx
           mv dx /usr/local/bin/
           
@@ -36,24 +36,22 @@ jobs:
 
       - name: Build with Dioxus
         run: |
-          # Use dx bundle with --out-dir for a predictable output location
-          # This works regardless of the base_path setting
-          dx bundle --release --platform web --out-dir dist
+          dx build --release --ssg
 
       - name: Post Build Adjustments
         run: |
-          # Dioxus 0.7 web bundle puts assets in [out-dir]/public/
+          # Copy SSG output from target/dx/my_blog/release/web/public/
           mkdir -p docs
-          cp -r dist/public/* docs/
+          cp -r target/dx/my_blog/release/web/public/* docs/
           
-          # Manually inject <base> tag if it's missing (Crucial for GitHub Pages)
+          # Manually inject <base> tag into all pre-rendered HTML files (Crucial for GitHub Pages)
           REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
-          sed -i "s|<head>|<head><base href=\"/$REPO_NAME/\">|" docs/index.html
+          find docs -name "*.html" -exec sed -i "s|<head>|<head><base href=\"/$REPO_NAME/\">|" {} \;
           
           # Disable Jekyll processing for GitHub Pages
           touch docs/.nojekyll
           
-          # Support SPA routing on refresh
+          # Support SPA routing fallback on refresh
           cp docs/index.html docs/404.html
 
       - name: Deploy to GitHub Pages

@@ -8,40 +8,30 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn BlogList() -> Element {
-    let posts_resource = use_resource(fetch_all_posts);
+    let posts_res = use_server_future(fetch_all_posts)?;
+    let posts_guard = posts_res.read();
+    let posts = posts_guard.as_ref().unwrap();
 
-    let posts_guard = posts_resource.read();
+    let blog_items = posts
+        .iter()
+        .map(|post| GalleryItem {
+            id: post.id.clone(),
+            title: post.title.clone(),
+            description: post.description.clone(),
+            image_url: post.image_url.clone(),
+            tags: post.tags.clone(),
+        })
+        .collect();
 
-    match &*posts_guard {
-        Some(posts) => {
-            let blog_items = posts
-                .iter()
-                .map(|post| GalleryItem {
-                    id: post.id.clone(),
-                    title: post.title.clone(),
-                    description: post.description.clone(),
-                    image_url: post.image_url.clone(),
-                    tags: post.tags.clone(),
-                })
-                .collect();
-
-            rsx! {
-                ContentGallery {
-                    title: "The Journey's Log",
-                    subtitle: "Documenting every breakthrough and lesson learned while navigating the Rust ecosystem—from bare-metal firmware to cloud-native services.",
-                    search_placeholder: "Search articles...",
-                    items: blog_items,
-                    categories: derive_categories(posts),
-                    route_factory: RouteFactory(|id| Route::BlogPost { id }),
-                }
-            }
+    rsx! {
+        ContentGallery {
+            title: "The Journey's Log",
+            subtitle: "Documenting every breakthrough and lesson learned while navigating the Rust ecosystem—from bare-metal firmware to cloud-native services.",
+            search_placeholder: "Search articles...",
+            items: blog_items,
+            categories: derive_categories(posts),
+            route_factory: RouteFactory(|id| Route::BlogPost { id }),
         }
-        None => rsx! {
-            div { class: "flex flex-col items-center justify-center min-h-[60vh]",
-                div { class: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-light" }
-                p { class: "mt-4 text-text-dark/60 dark:text-text-light/60", "Loading index..." }
-            }
-        },
     }
 }
 
@@ -52,16 +42,18 @@ pub fn BlogPost(id: String) -> Element {
         current_id.set(id.clone());
     }
 
-    let post_resource = use_resource(move || {
+    let post_res = use_server_future(move || {
         let id = current_id();
         async move { get_post_by_id(&id).await }
-    });
+    })?;
 
     use_syntax_highlighting();
 
-    let resource = post_resource.read();
-    match &*resource {
-        Some(Some(post)) => {
+    let posts_guard = post_res.read();
+    let post_opt = posts_guard.as_ref().unwrap();
+
+    match post_opt {
+        Some(post) => {
             let html_content = markdown_to_html(&post.content, &post.meta.id, "posts");
             rsx! {
                 document::Title { "{post.meta.title} - {APP_TITLE}" }
@@ -86,7 +78,7 @@ pub fn BlogPost(id: String) -> Element {
                 }
             }
         }
-        Some(None) => rsx! {
+        None => rsx! {
             div { class: "flex flex-col items-center justify-center min-h-[60vh]",
                 h1 { class: "text-4xl font-bold", "Post Not Found" }
                 Link {
@@ -96,19 +88,13 @@ pub fn BlogPost(id: String) -> Element {
                 }
             }
         },
-        None => rsx! {
-            div { class: "flex flex-col items-center justify-center min-h-[60vh]",
-                div { class: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-light" }
-                p { class: "mt-4 text-text-dark/60 dark:text-text-light/60", "Loading article..." }
-            }
-        },
     }
 }
 
 #[component]
 fn SeriesNavigation(current_post: Post) -> Element {
-    let posts_resource = use_resource(fetch_all_posts);
-    let posts_guard = posts_resource.read();
+    let posts_res = use_server_future(fetch_all_posts)?;
+    let posts_guard = posts_res.read();
 
     if let (Some(series_name), Some(posts)) =
         (current_post.meta.series.as_ref(), posts_guard.as_ref())

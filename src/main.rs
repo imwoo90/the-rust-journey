@@ -39,8 +39,86 @@ enum Route {
 
 const MAIN_CSS: Asset = asset!("assets/tailwind.css");
 
+#[server(endpoint = "static_routes", output = server_fn::codec::Json)]
+pub async fn static_routes() -> Result<Vec<String>, ServerFnError> {
+    println!("static_routes called. Cwd: {:?}", std::env::current_dir());
+    let mut routes = vec![
+        "/".to_string(),
+        "/blog".to_string(),
+        "/projects".to_string(),
+        "/about".to_string(),
+        "/contact".to_string(),
+    ];
+
+    let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+    let posts_dir = manifest_dir.join("public/content/posts");
+    let projects_dir = manifest_dir.join("public/content/projects");
+
+    match std::fs::read_dir(&posts_dir) {
+        Ok(entries) => {
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
+                        if let Some(name) = entry.file_name().to_str() {
+                            routes.push(format!("/blog/{}", name));
+                        }
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to read {:?}: {:?}", posts_dir, e);
+        }
+    }
+
+    match std::fs::read_dir(&projects_dir) {
+        Ok(entries) => {
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
+                        if let Some(name) = entry.file_name().to_str() {
+                            routes.push(format!("/projects/{}", name));
+                        }
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to read {:?}: {:?}", projects_dir, e);
+        }
+    }
+
+    println!("static_routes returning: {:?}", routes);
+    Ok(routes)
+}
+
 fn main() {
-    dioxus::launch(App);
+    #[cfg(feature = "server")]
+    {
+        let static_dir = std::env::var("DIOXUS_PUBLIC_PATH")
+            .map(std::path::PathBuf::from)
+            .ok()
+            .or_else(|| {
+                std::env::current_exe()
+                    .ok()
+                    .and_then(|p| p.parent().map(|parent| parent.join("public")))
+            })
+            .unwrap_or_else(|| std::path::PathBuf::from("./public"));
+        
+        let incremental_cfg = dioxus::server::IncrementalRendererConfig::new()
+            .static_dir(static_dir);
+
+        let serve_cfg = dioxus::server::ServeConfig::builder()
+            .incremental(incremental_cfg);
+
+        dioxus::LaunchBuilder::new()
+            .with_cfg(serve_cfg)
+            .launch(App);
+    }
+    #[cfg(not(feature = "server"))]
+    {
+        dioxus::launch(App);
+    }
 }
 
 /// Detect initial theme (Pure Rust abstraction)
