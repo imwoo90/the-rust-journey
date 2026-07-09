@@ -3420,6 +3420,7 @@ dependencies = [
  "dioxus",
  "dioxus-cli-config",
  "gloo-net",
+ "gloo-timers",
  "include_dir",
  "pulldown-cmark",
  "serde",

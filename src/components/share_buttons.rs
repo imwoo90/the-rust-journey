@@ -1,7 +1,48 @@
 use dioxus::prelude::*;
 
+#[derive(Props, Clone, PartialEq)]
+pub struct ShareButtonsProps {
+    pub title: String,
+    pub url: Option<String>,
+}
+
+fn url_encode(input: &str) -> String {
+    let mut encoded = String::new();
+    for byte in input.bytes() {
+        match byte {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
+                encoded.push(byte as char);
+            }
+            _ => {
+                encoded.push_str(&format!("%{:02X}", byte));
+            }
+        }
+    }
+    encoded
+}
+
 #[component]
-pub fn ShareButtons() -> Element {
+pub fn ShareButtons(props: ShareButtonsProps) -> Element {
+    let current_url = props.url.clone().unwrap_or_else(|| {
+        #[cfg(target_arch = "wasm32")]
+        {
+            web_sys::window()
+                .and_then(|w| w.location().href().ok())
+                .unwrap_or_default()
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            "".to_string()
+        }
+    });
+
+    let encoded_url = url_encode(&current_url);
+    let encoded_title = url_encode(&props.title);
+
+    let twitter_url = format!("https://twitter.com/intent/tweet?text={}&url={}", encoded_title, encoded_url);
+    let linkedin_url = format!("https://www.linkedin.com/sharing/share-offsite/?url={}", encoded_url);
+    let facebook_url = format!("https://www.facebook.com/sharer/sharer.php?u={}", encoded_url);
+
     rsx! {
         div { class: "mt-8 border-t border-text-dark/10 dark:border-white/5 pt-8",
             div { class: "flex flex-col sm:flex-row justify-between items-center gap-4 bg-text-dark/5 dark:bg-white/5 p-6 rounded-xl",
@@ -10,7 +51,8 @@ pub fn ShareButtons() -> Element {
                     a {
                         "aria-label": "Share on Twitter",
                         class: "text-text-dark/60 dark:text-gray-400 hover:text-primary dark:hover:text-white hover:bg-primary/10 dark:hover:bg-[#1DA1F2]/20 p-2.5 rounded-lg transition-all",
-                        href: "#",
+                        href: "{twitter_url}",
+                        target: "_blank",
                         svg {
                             "aria-hidden": "true",
                             class: "size-5",
@@ -22,7 +64,8 @@ pub fn ShareButtons() -> Element {
                     a {
                         "aria-label": "Share on LinkedIn",
                         class: "text-text-dark/60 dark:text-gray-400 hover:text-primary dark:hover:text-white hover:bg-primary/10 dark:hover:bg-[#0A66C2]/20 p-2.5 rounded-lg transition-all",
-                        href: "#",
+                        href: "{linkedin_url}",
+                        target: "_blank",
                         svg {
                             "aria-hidden": "true",
                             class: "size-5",
@@ -34,7 +77,8 @@ pub fn ShareButtons() -> Element {
                     a {
                         "aria-label": "Share on Facebook",
                         class: "text-text-dark/60 dark:text-gray-400 hover:text-primary dark:hover:text-white hover:bg-primary/10 dark:hover:bg-[#1877F2]/20 p-2.5 rounded-lg transition-all",
-                        href: "#",
+                        href: "{facebook_url}",
+                        target: "_blank",
                         svg {
                             "aria-hidden": "true",
                             class: "size-5",

@@ -1,4 +1,6 @@
-use crate::components::{ContentGallery, DetailHero, GalleryItem, RouteFactory};
+use crate::components::{
+    Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory, ShareButtons,
+};
 use crate::data::blog::{derive_categories, fetch_all_posts, get_post_by_id, Post};
 use crate::data::constants::APP_TITLE;
 use crate::data::utils::markdown_to_html;
@@ -55,8 +57,39 @@ pub fn BlogPost(id: String) -> Element {
     match post_opt {
         Some(post) => {
             let html_content = markdown_to_html(&post.content, &post.meta.id, "posts");
+            let img_url = if post.meta.image_url.is_empty() {
+                "".to_string()
+            } else if post.meta.image_url.starts_with("http") {
+                post.meta.image_url.clone()
+            } else if post.meta.image_url.starts_with('/') {
+                format!("https://imwoo90.github.io/the-rust-journey{}", post.meta.image_url)
+            } else {
+                format!("https://imwoo90.github.io/the-rust-journey/content/posts/{}/{}", post.meta.id, post.meta.image_url)
+            };
+
             rsx! {
                 document::Title { "{post.meta.title} - {APP_TITLE}" }
+                document::Meta { name: "description", content: post.meta.description.clone() }
+                document::Meta { name: "keywords", content: post.meta.tags.join(", ") }
+                document::Meta { name: "author", content: post.meta.author.clone() }
+                
+                // Open Graph / Facebook
+                document::Meta { property: "og:title", content: post.meta.title.clone() }
+                document::Meta { property: "og:description", content: post.meta.description.clone() }
+                document::Meta { property: "og:type", content: "article" }
+                document::Meta { property: "og:url", content: format!("https://imwoo90.github.io/the-rust-journey/blog/{}", post.meta.id) }
+                if !img_url.is_empty() {
+                    document::Meta { property: "og:image", content: img_url.clone() }
+                }
+                
+                // Twitter
+                document::Meta { name: "twitter:card", content: "summary_large_image" }
+                document::Meta { name: "twitter:title", content: post.meta.title.clone() }
+                document::Meta { name: "twitter:description", content: post.meta.description.clone() }
+                if !img_url.is_empty() {
+                    document::Meta { name: "twitter:image", content: img_url.clone() }
+                }
+
                 div { class: "layout-content-container flex flex-col w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16",
                     article { class: "w-full max-w-3xl flex flex-col gap-10",
                         DetailHero {
@@ -73,7 +106,11 @@ pub fn BlogPost(id: String) -> Element {
                             dangerous_inner_html: "{html_content}",
                         }
 
+                        ShareButtons { title: post.meta.title.clone() }
+
                         SeriesNavigation { current_post: post.clone() }
+
+                        Comments {}
                     }
                 }
             }

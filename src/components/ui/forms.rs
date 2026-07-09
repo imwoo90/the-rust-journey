@@ -36,9 +36,11 @@ pub fn Input(
     id: String,
     placeholder: String,
     r#type: Option<String>,
+    value: Option<String>,
     oninput: Option<EventHandler<FormEvent>>,
 ) -> Element {
     let input_type = r#type.unwrap_or_else(|| "text".to_string());
+    let val = value.unwrap_or_default();
     rsx! {
         div { class: "flex flex-col gap-2 w-full",
             if let Some(l) = label {
@@ -53,6 +55,7 @@ pub fn Input(
                 id: "{id}",
                 placeholder: "{placeholder}",
                 r#type: "{input_type}",
+                value: "{val}",
                 oninput: move |e| {
                     if let Some(handler) = oninput {
                         handler.call(e);
@@ -69,9 +72,11 @@ pub fn TextArea(
     id: String,
     placeholder: String,
     rows: Option<usize>,
+    value: Option<String>,
     oninput: Option<EventHandler<FormEvent>>,
 ) -> Element {
     let rows_count = rows.unwrap_or(6);
+    let val = value.unwrap_or_default();
     rsx! {
         div { class: "flex flex-col gap-2 w-full",
             if let Some(l) = label {
@@ -86,6 +91,7 @@ pub fn TextArea(
                 id: "{id}",
                 placeholder: "{placeholder}",
                 rows: "{rows_count}",
+                value: "{val}",
                 oninput: move |e| {
                     if let Some(handler) = oninput {
                         handler.call(e);

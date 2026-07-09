@@ -14,6 +14,7 @@ pub fn get_base_path() -> String {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct CommonMeta {
     #[serde(default)]

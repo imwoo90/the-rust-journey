@@ -1,4 +1,4 @@
-use crate::data::constants::{APP_TITLE, COPYRIGHT_YEAR};
+use crate::data::constants::{APP_TITLE, COPYRIGHT_YEAR, GITHUB_URL, LINKEDIN_URL};
 use crate::Route;
 use dioxus::prelude::*;
 
@@ -41,7 +41,8 @@ pub fn Footer() -> Element {
                     a {
                         "aria-label": "GitHub Profile",
                         class: "text-text-dark/40 dark:text-gray-500 hover:text-primary-light transition-all hover:scale-110",
-                        href: "#",
+                        href: GITHUB_URL,
+                        target: "_blank",
                         svg {
                             "aria-hidden": "true",
                             class: "size-6",
@@ -57,7 +58,8 @@ pub fn Footer() -> Element {
                     a {
                         "aria-label": "LinkedIn Profile",
                         class: "text-text-dark/40 dark:text-gray-500 hover:text-primary-light transition-all hover:scale-110",
-                        href: "#",
+                        href: LINKEDIN_URL,
+                        target: "_blank",
                         svg {
                             "aria-hidden": "true",
                             class: "size-6",
