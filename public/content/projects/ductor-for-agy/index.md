@@ -71,7 +71,7 @@ Deploying the custom fork under systemd:
 
 ```bash
 # Clone the fork
-git clone -b custom https://github.com/imwoo90/ductor_for_agy.git
+git clone -b ductor_for_agy https://github.com/imwoo90/ductor_for_agy.git
 
 # Install dependencies with uv
 uv sync
