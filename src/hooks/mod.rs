@@ -22,8 +22,26 @@ pub fn use_syntax_highlighting() {
 pub fn use_mermaid() {
     use_effect(move || {
         document::eval("
+            if (window.mermaidObserver) {
+                window.mermaidObserver.disconnect();
+            }
+            window.mermaidLastIsDark = document.documentElement.classList.contains('dark');
+            
             const renderMermaid = () => {
                 if (window.mermaid) {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    
+                    // If dark/light mode changed since last render, clear old SVGs to re-render
+                    if (isDark !== window.mermaidLastIsDark) {
+                        window.mermaidLastIsDark = isDark;
+                        document.querySelectorAll('.mermaid').forEach(el => el.remove());
+                        document.querySelectorAll('pre code.language-mermaid').forEach((el) => {
+                            el.removeAttribute('data-processed');
+                            const pre = el.parentElement;
+                            if (pre) pre.style.display = '';
+                        });
+                    }
+
                     const targets = [];
                     document.querySelectorAll('pre code.language-mermaid:not([data-processed=\"true\"])').forEach((el) => {
                         const pre = el.parentElement;
@@ -53,11 +71,21 @@ pub fn use_mermaid() {
                         }
                     });
                     if (targets.length > 0) {
-                        const isDark = document.documentElement.classList.contains('dark');
                         window.mermaid.initialize({
                             startOnLoad: false,
-                            theme: isDark ? 'dark' : 'default',
-                            securityLevel: 'loose'
+                            theme: isDark ? 'base' : 'default',
+                            securityLevel: 'loose',
+                            themeVariables: isDark ? {
+                                primaryColor: '#1e293b',          // slate-800
+                                primaryBorderColor: '#3b82f6',    // blue-500
+                                primaryTextColor: '#f8fafc',      // slate-50
+                                lineColor: '#94a3b8',             // slate-400
+                                arrowheadColor: '#94a3b8',        // slate-400
+                                edgeLabelBackground: '#0f172a',   // slate-950 (dark background match)
+                                textColor: '#e2e8f0',             // slate-200
+                                nodeTextColor: '#f8fafc',
+                                labelTextColor: '#e2e8f0'
+                            } : {}
                         });
                         window.mermaid.run({
                             nodes: targets
@@ -66,9 +94,8 @@ pub fn use_mermaid() {
                 }
             };
             renderMermaid();
-            const observer = new MutationObserver(renderMermaid);
-            observer.observe(document.body, { childList: true, subtree: true });
-            return () => observer.disconnect();
+            window.mermaidObserver = new MutationObserver(renderMermaid);
+            window.mermaidObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
         ");
     });
 }
