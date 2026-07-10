@@ -3,7 +3,7 @@ title: "Ductor for Antigravity"
 date: "2026-07-10"
 author: "imwoo90"
 description: "A customized fork of the Ductor bot orchestrator optimized for Google Antigravity. Features persistent PTY session warm-loading, synchronization locks, collapsible thinking logs, and automated artifact delivery."
-image_url: "ductor_for_agy_project.png"
+image_url: "ductor_for_agy_project.jpg"
 tags: ["python", "telegram", "antigravity", "pty", "systemd", "automation"]
 link: "https://github.com/imwoo90/ductor_for_agy"
 link_text: "View GitHub Fork"
