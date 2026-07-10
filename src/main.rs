@@ -109,8 +109,9 @@ async fn strip_base_path(
         } else {
             format!("{}?{}", new_path, query)
         };
-        parts.path_and_query = Some(new_pq.parse().unwrap());
-        *req.uri_mut() = axum::http::Uri::from_parts(parts).unwrap();
+        let new_uri: axum::http::Uri = new_pq.parse().unwrap();
+        req.extensions_mut().insert(axum::extract::OriginalUri(new_uri.clone()));
+        *req.uri_mut() = new_uri;
     }
     next.run(req).await
 }

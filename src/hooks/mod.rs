@@ -29,6 +29,12 @@ pub fn use_mermaid() {
                         const pre = el.parentElement;
                         if (pre && pre.tagName === 'PRE') {
                             const code = el.textContent;
+                            
+                            // Check if next sibling is already a mermaid div to avoid duplicate creation
+                            if (pre.nextSibling && pre.nextSibling.className === 'mermaid') {
+                                return;
+                            }
+
                             const container = document.createElement('div');
                             container.className = 'mermaid';
                             container.style.display = 'flex';
@@ -36,8 +42,13 @@ pub fn use_mermaid() {
                             container.style.width = '100%';
                             container.style.margin = '1.5rem 0';
                             container.textContent = code;
+                            
                             el.setAttribute('data-processed', 'true');
-                            pre.replaceWith(container);
+                            
+                            // Hide original pre instead of replacing it, keeping VDOM node tree intact
+                            pre.style.display = 'none';
+                            pre.after(container);
+                            
                             targets.push(container);
                         }
                     });
