@@ -4,7 +4,7 @@ use crate::components::{
 use crate::data::blog::{derive_categories, fetch_all_posts, get_post_by_id, Post};
 use crate::data::constants::APP_TITLE;
 use crate::data::utils::markdown_to_html;
-use crate::hooks::use_syntax_highlighting;
+use crate::hooks::{use_syntax_highlighting, use_mermaid};
 use crate::Route;
 use dioxus::prelude::*;
 
@@ -50,6 +50,7 @@ pub fn BlogPost(id: String) -> Element {
     })?;
 
     use_syntax_highlighting();
+    use_mermaid();
 
     let posts_guard = post_res.read();
     let post_opt = posts_guard.as_ref().unwrap();

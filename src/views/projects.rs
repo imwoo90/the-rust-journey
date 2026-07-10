@@ -4,7 +4,7 @@ use crate::components::{
 use crate::data::constants::APP_TITLE;
 use crate::data::projects::{derive_categories, fetch_all_projects, get_project_by_id};
 use crate::data::utils::markdown_to_html;
-use crate::hooks::use_syntax_highlighting;
+use crate::hooks::{use_syntax_highlighting, use_mermaid};
 use crate::Route;
 use dioxus::prelude::*;
 
@@ -50,6 +50,7 @@ pub fn ProjectPost(id: String) -> Element {
     })?;
 
     use_syntax_highlighting();
+    use_mermaid();
 
     let projects_guard = project_res.read();
     let project_opt = projects_guard.as_ref().unwrap();
