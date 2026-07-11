@@ -22,8 +22,10 @@ link_text: "View GitHub Fork"
 *   **📑 Polymorphic LogWatcher (`LogMonitorObserver`)**: Refactored the core log watcher loop out of the Telegram app's global lifecycle. It is now a clean, polymorphically registered `LogMonitorObserver` that integrates with the main orchestrator lifecycle hooks.
 *   **🎭 Rich Collapsible Telegram Formatting**: Automatically parses thought traces and tool-execution logs. It converts long, noisy thinking processes and tool calls into expandable/collapsible Telegram quote blocks, keeping the chat clean and mobile-friendly.
 *   **📌 Provider-Scoped Telegram Command Menu**: Dynamically updates the Telegram menu options based on the active provider. Injects agy-specific commands (`/plan`, `/goal`, `/grill_me`, `/learn`, `/teamwork_preview`) dynamically into the UI.
-*   **📁 Automatic Artifact Delivery**: Detects when new or modified Markdown artifacts (like plans, summaries, or analyses) are generated in the agent's internal `brain/` directory. Automatically copies them to `output_to_user/` and sends them as physical file attachments.
+*   **📁 Agent-Driven Artifact Delivery**: Instead of fragile filesystem polling, the agent is instructed via workspace rules to explicitly output absolute file path tags (e.g. `<file:/path/to/artifact.md>`) at the end of its response. The Telegram messenger parser intercepts these tags and delivers the files as native attachments.
 *   **💬 Non-Blocking Telegram Planning (No-TUI Fallback)**: Solves the limitation of terminal-based interactive multiple-choice prompts (`ask_question`). In headless execution, a scoped instruction redirects the interactive Bubbletea TUI questions into clean markdown text responses and terminates the turn, allowing the user to reply via Telegram and resume progress via `--continue`.
+*   **📬 Last-Active Chat Recovery**: Tracks the user's active session and thread via `last_active_chat.json`. If the daemon restarts, it notifies the exact thread that it is back online, preventing spammy global broadcasts.
+*   **🔇 Muted Error Logs**: UX polish that silences redundant file-not-found or permission warnings in user chats, logging them to the server console instead.
 
 ---
 
@@ -42,8 +44,8 @@ graph TD
     LockFlag -->|Yes: Suppress Poll| Skip[Skip redundant send]
     
     PTYHolder -.->|Generates Artifacts| BrainDir[(brain/)]
-    BrainDir -->|6. File Watcher| ArtifactHandler[Artifact Auto-Exporter]
-    ArtifactHandler -->|7. File Attachment| TelegramApp
+    PTYHolder -->|6. Outputs Path Tag| TelegramApp
+    TelegramApp -->|7. Reads & Sends File| BrainDir
 ```
 
 ---

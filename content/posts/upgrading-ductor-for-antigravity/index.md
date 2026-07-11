@@ -93,13 +93,22 @@ def format_thoughts(thoughts: str) -> str:
 
 Now, the entire reasoning path is neatly tucked away. If a build fails, I can tap to expand the details, but my default chat view remains clean and readable.
 
-### Chapter 4: Auto-Forwarding Artifacts
+### Chapter 4: Agent-Driven Artifact Delivery
 
 When Antigravity generates structured markdown files (like a `/plan` or `analysis_results.md`), they are saved deep in the local `.gemini/antigravity-cli/brain/` directory.
 
-To prevent having to SSH into my machine or open a separate editor to read them, I implemented an artifact detector in `antigravity_provider.py`. The provider monitors the directory for file updates during agent runs. If a Markdown file is created or updated, it is copied to `output_to_user/` and sent straight to Telegram as a native document attachment.
+To prevent having to SSH into my machine or open a separate editor to read them, I originally implemented an automatic directory watcher in `antigravity_provider.py` to copy files to `output_to_user/` and auto-attach them. However, to make the process more explicit and avoid unnecessary file system overhead, I refactored this into an **agent-driven approach**.
 
-### Chapter 5: Taming the TUI — Non-Blocking Telegram Planning
+Through system rules (`AGENTS.md`), the agent itself is instructed to output the absolute path tag (e.g., `<file:/home/wimvm/.gemini/antigravity-cli/brain/session_id/artifact.md>`) at the end of its response. The Telegram messenger parser detects this tag and directly streams the file to the user's chat.
+
+### Chapter 5: Lifecycle Recovery and UX Polish
+
+To make the bot daemon production-ready, I added a few more crucial UX enhancements:
+1. **Last-Active Chat Recovery**: The bot records the active chat and thread ID to `last_active_chat.json`. When systemd restarts the service, the bot sends a recovery notification ("*Bot Restarted — back online*") directly to the active thread, avoiding global broadcast spam.
+2. **Silent Error Logging**: Rather than posting ugly `[File not found]` or `[Failed to send]` errors into the user chat when a file path is incorrect, these exceptions are silenced on Telegram and logged internally to the console.
+3. **HTML Message Splitting**: Fixed a layout bug where long messages split by the Telegram message chunker would break HTML/Markdown block boundaries.
+
+### Chapter 6: Taming the TUI — Non-Blocking Telegram Planning
 
 One major road block in running terminal-native agents headlessly is **interactive user prompts**. During commands like `/plan`, the Antigravity CLI spins up a Bubbletea-based terminal UI (TUI) to ask the user multiple-choice questions (e.g., tech stack, design preferences). 
 
@@ -128,6 +137,6 @@ I had to build a robust escaping wrapper to sanitize markdown tokens while prese
 By building `ductor_for_agy`, my workspace has transformed. I now have:
 - **Zero latency**: Instant responses from a warmed-up Antigravity agent.
 - **Clean interface**: Collapsible logs that keep my mobile screen clean.
-- **Automated workflows**: Artifact files delivered directly to my chat.
+- **Robust workflows**: Explicit artifact attachments and self-healing system recovery notifications.
 
 It is a blueprint for how developers can adapt general-purpose AI daemons into custom, high-speed, localized workspaces.
