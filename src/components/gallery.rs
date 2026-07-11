@@ -38,14 +38,10 @@ pub fn ContentGallery(
     let mut selected_category = use_signal(|| "All".to_string());
 
     let filtered_items = items.into_iter().filter(|item| {
-        let matches_search = item
-            .title
-            .to_lowercase()
-            .contains(&search_query().to_lowercase())
-            || item
-                .description
-                .to_lowercase()
-                .contains(&search_query().to_lowercase());
+        let query = search_query().to_lowercase();
+        let matches_search = item.title.to_lowercase().contains(&query)
+            || item.description.to_lowercase().contains(&query)
+            || item.tags.iter().any(|tag| tag.to_lowercase().contains(&query));
         let matches_category =
             selected_category() == "All" || item.tags.contains(&selected_category());
         matches_search && matches_category

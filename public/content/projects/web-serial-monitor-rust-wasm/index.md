@@ -23,6 +23,25 @@ This project reimagines the traditional desktop serial monitor as a powerful, ze
 
 ## 🛠️ Technical Architecture
 
+The application implements a high-performance, non-blocking pipeline using Web Workers and the browser's virtual file system:
+
+```mermaid
+graph TD
+    MCU["🔌 Embedded Device / MCU"] <-->|Raw Serial Data| WebSerial["📡 Web Serial API"]
+    
+    subgraph Browser["Browser Sandbox"]
+        WebSerial <-->|Read/Write streams| WebWorker["Worker (JS): log_worker.js"]
+        WebWorker -->|1. Fast Buffering & Filtering| Filtering["Regex Filter / Parser"]
+        Filtering -->|2. Direct Stream Write| OPFS[("📁 Origin Private File System")]
+        
+        WebWorker <-->|3. postMessage metadata| MainThread["Main Thread (Rust / Dioxus / WASM)"]
+        MainThread <-->|4. Read visible window logs| OPFS
+        MainThread -->|5. Push rendering subset| VirtualScroll["📺 Virtual Scroller UI"]
+    end
+    
+    User(["👤 Developer / User"]) <-->|Interacts / Debugs| VirtualScroll
+```
+
 ### 1. Multi-Threaded Core
 To prevent UI freezing during high-speed data bursts, the application uses a dual-thread architecture:
 -   **Main Thread (Rust/Dioxus)**: Handles the UI, state management, and user interactions.
