@@ -1,7 +1,11 @@
 //! # Content Gallery Component
 //!
+//! ## Overview
 //! Provides searchable, category-filtered portfolio and article gallery layouts.
 //! Integrates hero headers, real-time keyword search, category filter chips, and card grids.
+//!
+//! ## Search Tags
+//! #gallery, #search, #filtering, #cards, #portfolio
 
 use crate::components::{Card, CategoryFilter, Container, Hero, SearchBar, Section};
 use crate::data::utils::get_base_path;

@@ -1,7 +1,11 @@
 //! # Form and Input Components
 //!
+//! ## Overview
 //! Provides reusable form inputs, text areas, primary action buttons, and search input bars.
 //! Encapsulates dark mode theme variants, interactive focus states, and input event handlers.
+//!
+//! ## Search Tags
+//! #forms, #inputs, #buttons, #search-bar, #text-area
 
 use crate::Route;
 use dioxus::prelude::*;

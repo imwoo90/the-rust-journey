@@ -1,7 +1,11 @@
 //! # Global Site Constants and Configuration
 //!
+//! ## Overview
 //! Defines central application-wide metadata, author credentials, social platform URLs,
 //! and asset links used across views, meta tags, and the global navigation footer.
+//!
+//! ## Search Tags
+//! #constants, #configuration, #metadata, #site-config, #social-links
 
 use dioxus::prelude::*;
 

@@ -1,7 +1,11 @@
 //! # 404 Not Found Fallback View
 //!
+//! ## Overview
 //! Renders a stylized Rust developer-themed 404 terminal panic screen when unmatched URL routes are entered.
 //! Provides recovery navigation directing visitors back to the home view.
+//!
+//! ## Search Tags
+//! #not-found, #404, #error-page, #panic-screen, #routing-fallback
 
 use crate::components::*;
 use crate::data::constants::APP_TITLE;

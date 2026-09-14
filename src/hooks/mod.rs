@@ -1,7 +1,11 @@
 //! # Client Hooks for Interactive Rendering
 //!
+//! ## Overview
 //! Exposes reactive Dioxus client-side hooks managing external browser libraries.
 //! Automates highlight.js syntax highlighting and dynamic Mermaid.js diagram layout.
+//!
+//! ## Search Tags
+//! #hooks, #syntax-highlighting, #mermaid, #client, #dom-observer
 
 use dioxus::prelude::*;
 

@@ -1,7 +1,11 @@
 //! # Social Media Share Buttons Component
 //!
+//! ## Overview
 //! Provides social sharing triggers for Twitter/X, LinkedIn, and Facebook, alongside URL encoding helpers.
 //! Automatically captures the current window location in browser runtime for one-click sharing.
+//!
+//! ## Search Tags
+//! #share, #social-media, #url-encode, #share-buttons
 
 use dioxus::prelude::*;
 

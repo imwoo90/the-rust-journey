@@ -1,7 +1,11 @@
 //! # Blog Views Module
 //!
+//! ## Overview
 //! Provides the blog catalog and detailed individual article reading views.
 //! Handles syntax highlighting hooks, mermaid rendering, SEO metadata, and series navigation.
+//!
+//! ## Search Tags
+//! #blog, #article, #reading-view, #series, #markdown-view
 
 use crate::components::{
     Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory, ShareButtons,

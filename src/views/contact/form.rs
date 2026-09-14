@@ -1,7 +1,11 @@
 //! # Contact Form Submodule
 //!
+//! ## Overview
 //! Encapsulates input fields, validation logic, submission delays,
 //! and interactive error states for the contact communication interface.
+//!
+//! ## Search Tags
+//! #contact-form, #form-inputs, #validation, #form-submit
 
 use crate::components::{Input, SectionTitle, TextArea};
 use dioxus::prelude::*;

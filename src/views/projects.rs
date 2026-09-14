@@ -1,7 +1,11 @@
 //! # Projects Views Module
 //!
+//! ## Overview
 //! Provides the workshop project portfolio catalog and detailed project showcase views.
 //! Handles external project links, markdown content parsing, and social sharing metadata.
+//!
+//! ## Search Tags
+//! #projects, #showcase-view, #portfolio, #project-detail, #markdown-view
 
 use crate::components::{
     Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory, ShareButtons,

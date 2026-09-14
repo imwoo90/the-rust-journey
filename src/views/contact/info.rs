@@ -1,7 +1,11 @@
 //! # Contact Info Submodule
 //!
+//! ## Overview
 //! Exposes external communication endpoints, author profile links,
 //! and metadata cards for reaching out across developer networks.
+//!
+//! ## Search Tags
+//! #contact-info, #social-links, #author-profile, #sidebar
 
 use crate::components::SectionTitle;
 use crate::data::constants::{AUTHOR_EMAIL, AUTHOR_NAME, GITHUB_URL, GITHUB_USERNAME, LINKEDIN_URL};

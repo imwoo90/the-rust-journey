@@ -1,7 +1,11 @@
 //! # Project Showcase Data Model and Asynchronous Ingestion
 //!
+//! ## Overview
 //! Exposes structures and loaders for project entries, frontmatter metadata, and tag filters.
 //! Supports runtime WASM HTTP fetching via gloo-net and non-WASM filesystem reads for SSG.
+//!
+//! ## Search Tags
+//! #projects, #showcase, #project-meta, #async-fetch, #ssg
 
 #[allow(unused_imports)]
 use crate::data::utils::{get_base_path, parse_frontmatter};

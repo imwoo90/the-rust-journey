@@ -1,7 +1,11 @@
 //! # Card and Badge Components
 //!
+//! ## Overview
 //! Exposes visual card containers for posts and showcase items with interactive hover transitions,
 //! responsive aspect-ratio thumbnails, inline tag badges, and unified router/external link triggers.
+//!
+//! ## Search Tags
+//! #cards, #badges, #thumbnails, #ui-cards, #hover-effects
 
 use crate::Route;
 use dioxus::prelude::*;

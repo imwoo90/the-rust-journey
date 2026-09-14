@@ -1,7 +1,11 @@
 //! # About Page View
 //!
+//! ## Overview
 //! Exposes the author biography, full-stack embedded development philosophy,
 //! core engineering skill badges, and professional career milestones timeline.
+//!
+//! ## Search Tags
+//! #about, #biography, #skills, #timeline, #career
 
 use crate::components::{Badge, Container, Section, SectionTitle, TimelineItem};
 use crate::data::constants::{APP_TITLE, AUTHOR_NAME};

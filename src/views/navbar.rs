@@ -1,7 +1,11 @@
 //! # Global Navigation Bar and Layout Header
 //!
+//! ## Overview
 //! Provides the persistent sticky top header, desktop navigation links, responsive mobile drawer,
 //! and the theme toggle trigger. Wraps the active route Outlet and persistent site Footer.
+//!
+//! ## Search Tags
+//! #navbar, #header, #navigation, #theme-toggle, #layout-wrapper
 
 use crate::data::constants::{APP_TITLE, FAVICON};
 use crate::views::Footer;

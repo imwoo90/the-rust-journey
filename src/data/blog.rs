@@ -1,7 +1,11 @@
 //! # Blog Post Data Model and Asynchronous Ingestion
 //!
+//! ## Overview
 //! Exposes structures and loaders for blog articles, post metadata, and category derivation.
 //! Supports runtime WASM HTTP fetching via gloo-net and non-WASM filesystem reads for SSG.
+//!
+//! ## Search Tags
+//! #blog, #post-meta, #async-fetch, #ssg, #frontmatter
 
 #[allow(unused_imports)]
 use crate::data::utils::{get_base_path, parse_frontmatter};

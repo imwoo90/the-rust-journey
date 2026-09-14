@@ -1,7 +1,11 @@
 //! # Hero Header Components
 //!
+//! ## Overview
 //! Provides top-level visual headers for index galleries and detailed article views.
 //! Includes breadcrumb navigation, author attribution, dates, and estimated reading times.
+//!
+//! ## Search Tags
+//! #hero, #header, #breadcrumbs, #detail-hero, #banner
 
 use crate::Route;
 use dioxus::prelude::*;

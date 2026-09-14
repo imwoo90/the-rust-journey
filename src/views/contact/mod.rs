@@ -6,7 +6,7 @@
 //!
 //! ## Submodules
 //! - [`form`]: Contact input state management, client-side validation, and submit dispatchers.
-//! - [`mod@info`]: Sidebar contact coordinates, social handles, and availability metadata.
+//! - [`info`][`mod@info`]: Sidebar contact coordinates, social handles, and availability metadata.
 //!
 //! ## Search Tags
 //! #contact, #form-validation, #contact-info, #user-feedback

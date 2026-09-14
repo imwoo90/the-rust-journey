@@ -1,7 +1,17 @@
 //! # Application Entrypoint and Routing Table
 //!
+//! ## Overview
 //! Configures top-level router hierarchy, static pre-rendering discovery,
 //! server-side static file serving, and browser client hydration shells.
+//!
+//! ## Submodules
+//! - [`components`]: Reusable UI primitives, layout wrappers, and interactive widgets.
+//! - [`data`]: Data access models, metadata loaders, and parsing utilities.
+//! - [`hooks`]: Client-side lifecycle hooks for syntax highlighting and diagrams.
+//! - [`views`]: Page-level route views, navigation bars, and layout footers.
+//!
+//! ## Search Tags
+//! #entrypoint, #routing, #router, #server, #hydration
 
 use dioxus::prelude::*;
 use views::{About, BlogList, BlogPost, Contact, Home, Navbar, NotFound, ProjectList, ProjectPost};

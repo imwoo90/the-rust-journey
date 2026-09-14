@@ -1,7 +1,11 @@
 //! # Giscus Comments Integration Component
 //!
+//! ## Overview
 //! Injects a client-side Giscus comment widget driven by GitHub Discussions into article detail views.
 //! Dynamically updates the comment widget theme in response to active dark and light mode state changes.
+//!
+//! ## Search Tags
+//! #comments, #giscus, #github-discussions, #wasm-widget
 
 use dioxus::prelude::*;
 

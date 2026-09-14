@@ -1,7 +1,11 @@
 //! # Shared Data Utilities and Markdown Processing
 //!
+//! ## Overview
 //! Provides core parsing algorithms for frontmatter metadata, read-time calculation,
 //! subpath base-URL resolution, and AST-level markdown transformation via pulldown-cmark.
+//!
+//! ## Search Tags
+//! #utils, #markdown, #frontmatter, #base-path, #read-time
 
 use pulldown_cmark::{html, Event, Options, Parser, Tag};
 use serde::{Deserialize, Serialize};

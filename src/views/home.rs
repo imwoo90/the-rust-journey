@@ -1,7 +1,11 @@
 //! # Home Landing Page View
 //!
+//! ## Overview
 //! Provides the primary landing view showcasing recent blog posts and featured projects,
 //! personal engineering philosophy, and direct call-to-action triggers toward the contact view.
+//!
+//! ## Search Tags
+//! #home, #landing, #featured-posts, #featured-projects, #hero
 
 use crate::components::*;
 use crate::data::blog::{fetch_all_posts, PostMeta};

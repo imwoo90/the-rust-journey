@@ -1,7 +1,11 @@
 //! # Layout Primitives
 //!
+//! ## Overview
 //! Provides structural layout containers including responsive centered content wrappers and section blocks.
 //! Ensures consistent margin, padding, and max-width boundaries across view templates.
+//!
+//! ## Search Tags
+//! #layout, #container, #section, #grid, #spacing
 
 use dioxus::prelude::*;
 

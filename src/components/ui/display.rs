@@ -1,7 +1,11 @@
 //! # Data Display Components
 //!
+//! ## Overview
 //! Provides SectionTitle headers, vertical chronological TimelineItem views,
 //! and scrollable horizontal CategoryFilter chip bars with active state styling.
+//!
+//! ## Search Tags
+//! #display, #section-title, #timeline, #category-filter, #chips
 
 use dioxus::prelude::*;
 

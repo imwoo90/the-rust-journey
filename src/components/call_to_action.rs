@@ -1,7 +1,11 @@
 //! # Call To Action Banner Component
 //!
+//! ## Overview
 //! Renders a prominent invitation banner encouraging collaboration and inquiries.
 //! Features an arrow-accented action link directing visitors toward the contact view.
+//!
+//! ## Search Tags
+//! #cta, #banner, #call-to-action, #contact-prompt
 
 use dioxus::prelude::*;
 

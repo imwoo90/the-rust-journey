@@ -1,7 +1,11 @@
 //! # Global Application Footer View
 //!
+//! ## Overview
 //! Provides the persistent bottom layout footer hosting copyright attribution,
 //! secondary navigation router links, and external GitHub/LinkedIn social anchors.
+//!
+//! ## Search Tags
+//! #footer, #layout, #copyright, #navigation-links, #social-anchors
 
 use crate::data::constants::{APP_TITLE, COPYRIGHT_YEAR, GITHUB_URL, LINKEDIN_URL};
 use crate::Route;
