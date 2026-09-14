@@ -1,0 +1,12 @@
+{
+  "name": "the-rust-journey-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Rust Journey E2E integration and behavioral verification test suite",
+  "scripts": {
+    "test:e2e": "node e2e/test_runner.js"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}
