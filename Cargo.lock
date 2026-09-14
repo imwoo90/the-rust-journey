@@ -3422,10 +3422,12 @@ dependencies = [
  "gloo-net",
  "gloo-timers",
  "include_dir",
+ "proc-macro2",
  "pulldown-cmark",
  "serde",
  "serde_json",
  "serde_yaml",
+ "syn 2.0.111",
  "tokio",
  "web-sys",
 ]

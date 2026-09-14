@@ -1,6 +1,16 @@
+//! Build script for The Rust Journey.
+//!
+//! Generates metadata indices for blog posts and projects, and runs the Agent-Native linter.
+
+#![allow(missing_docs, clippy::unwrap_used, clippy::expect_used)]
+
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
+
+#[path = "build_linter.rs"]
+mod build_linter;
+
 
 #[derive(Serialize, Deserialize, Debug)]
 struct PostMeta {
@@ -32,8 +42,11 @@ struct ProjectMeta {
 }
 
 fn main() {
+    build_linter::run_linter();
+
     println!("cargo:rerun-if-changed=public/content/posts");
     println!("cargo:rerun-if-changed=public/content/projects");
+
 
     generate_index(
         "public/content/posts",
