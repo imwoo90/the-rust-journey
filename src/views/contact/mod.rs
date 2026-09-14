@@ -1,7 +1,15 @@
-//! # Contact View Module
+//! # Contact View Subsystem (index.md)
 //!
+//! ## Overview
 //! Provides the primary contact page view composing the interactive validation form,
 //! message transmission status transitions, and external communication coordinates.
+//!
+//! ## Submodules
+//! - [`form`]: Contact input state management, client-side validation, and submit dispatchers.
+//! - [`mod@info`]: Sidebar contact coordinates, social handles, and availability metadata.
+//!
+//! ## Search Tags
+//! #contact, #form-validation, #contact-info, #user-feedback
 
 pub mod form;
 pub mod info;
