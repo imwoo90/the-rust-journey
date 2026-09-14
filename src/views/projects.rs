@@ -1,18 +1,42 @@
+//! # Projects Views Module
+//!
+//! Provides the workshop project portfolio catalog and detailed project showcase views.
+//! Handles external project links, markdown content parsing, and social sharing metadata.
+
 use crate::components::{
     Comments, ContentGallery, DetailHero, GalleryItem, RouteFactory, ShareButtons,
 };
 use crate::data::constants::APP_TITLE;
-use crate::data::projects::{derive_categories, fetch_all_projects, get_project_by_id};
+use crate::data::projects::{derive_categories, fetch_all_projects, get_project_by_id, Project};
 use crate::data::utils::markdown_to_html;
-use crate::hooks::{use_syntax_highlighting, use_mermaid};
+use crate::hooks::{use_mermaid, use_syntax_highlighting};
 use crate::Route;
 use dioxus::prelude::*;
 
+/// Resolves the canonical URL for project display images.
+fn resolve_project_image(project: &Project) -> String {
+    if project.meta.image_url.is_empty() {
+        String::new()
+    } else if project.meta.image_url.starts_with("http") {
+        project.meta.image_url.clone()
+    } else if project.meta.image_url.starts_with('/') {
+        format!("https://imwoo90.github.io/the-rust-journey{}", project.meta.image_url)
+    } else {
+        format!(
+            "https://imwoo90.github.io/the-rust-journey/content/projects/{}/{}",
+            project.meta.id, project.meta.image_url
+        )
+    }
+}
+
+/// Renders the searchable portfolio catalog of built software and tools.
 #[component]
 pub fn ProjectList() -> Element {
     let projects_res = use_server_future(fetch_all_projects)?;
     let projects_guard = projects_res.read();
-    let projects = projects_guard.as_ref().unwrap();
+    let Some(projects) = projects_guard.as_ref() else {
+        return rsx! { div { class: "flex justify-center items-center min-h-[50vh]", "Loading projects..." } };
+    };
 
     let project_items = projects
         .iter()
@@ -37,6 +61,82 @@ pub fn ProjectList() -> Element {
     }
 }
 
+/// Renders SEO, OpenGraph, and Twitter social cards metadata tags for projects.
+#[component]
+fn ProjectPostMeta(
+    title: String,
+    description: String,
+    tags: Vec<String>,
+    author: String,
+    id: String,
+    img_url: String,
+) -> Element {
+    rsx! {
+        document::Title { "{title} - {APP_TITLE}" }
+        document::Meta { name: "description", content: description.clone() }
+        document::Meta { name: "keywords", content: tags.join(", ") }
+        document::Meta { name: "author", content: author }
+        document::Meta { property: "og:title", content: title.clone() }
+        document::Meta { property: "og:description", content: description.clone() }
+        document::Meta { property: "og:type", content: "article" }
+        document::Meta { property: "og:url", content: format!("https://imwoo90.github.io/the-rust-journey/projects/{}", id) }
+        if !img_url.is_empty() {
+            document::Meta { property: "og:image", content: img_url.clone() }
+        }
+        document::Meta { name: "twitter:card", content: "summary_large_image" }
+        document::Meta { name: "twitter:title", content: title }
+        document::Meta { name: "twitter:description", content: description }
+        if !img_url.is_empty() {
+            document::Meta { name: "twitter:image", content: img_url }
+        }
+    }
+}
+
+/// Renders the main project article layout, markdown presentation, launch link, and comments.
+#[component]
+fn ProjectPostContent(project: Project, html_content: String) -> Element {
+    rsx! {
+        div { class: "layout-content-container flex flex-col w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16",
+            article { class: "w-full max-w-3xl flex flex-col gap-10",
+                DetailHero {
+                    title: project.meta.title.clone(),
+                    author: project.meta.author.clone(),
+                    date: project.meta.date.clone(),
+                    read_time: project.get_read_time(),
+                    back_link: Route::ProjectList {},
+                    back_label: "Projects".to_string(),
+                }
+                div {
+                    class: "prose max-w-none dark:prose-invert",
+                    dangerous_inner_html: "{html_content}",
+                }
+                ShareButtons { title: project.meta.title.clone() }
+                ProjectExternalAction {
+                    link: project.meta.link.clone(),
+                    label: project.meta.link_text.clone(),
+                }
+                Comments {}
+            }
+        }
+    }
+}
+
+/// Renders the 404 message when a project is not found.
+#[component]
+fn ProjectNotFoundView() -> Element {
+    rsx! {
+        div { class: "flex flex-col items-center justify-center min-h-[60vh]",
+            h1 { class: "text-4xl font-bold", "Project Not Found" }
+            Link {
+                to: Route::ProjectList {},
+                class: "mt-4 text-primary-light hover:underline",
+                "Back to Projects"
+            }
+        }
+    }
+}
+
+/// Renders an individual project detail page with external links and documentation.
 #[component]
 pub fn ProjectPost(id: String) -> Element {
     let mut current_id = use_signal(|| id.clone());
@@ -53,88 +153,49 @@ pub fn ProjectPost(id: String) -> Element {
     use_mermaid();
 
     let projects_guard = project_res.read();
-    let project_opt = projects_guard.as_ref().unwrap();
+    let Some(project_opt) = projects_guard.as_ref() else {
+        return rsx! { div { class: "flex justify-center items-center min-h-[50vh]", "Loading project..." } };
+    };
 
     match project_opt {
         Some(project) => {
             let html_content = markdown_to_html(&project.content, &project.meta.id, "projects");
-            let img_url = if project.meta.image_url.is_empty() {
-                "".to_string()
-            } else if project.meta.image_url.starts_with("http") {
-                project.meta.image_url.clone()
-            } else if project.meta.image_url.starts_with('/') {
-                format!("https://imwoo90.github.io/the-rust-journey{}", project.meta.image_url)
-            } else {
-                format!("https://imwoo90.github.io/the-rust-journey/content/projects/{}/{}", project.meta.id, project.meta.image_url)
-            };
+            let img_url = resolve_project_image(project);
 
             rsx! {
-                document::Title { "{project.meta.title} - {APP_TITLE}" }
-                document::Meta { name: "description", content: project.meta.description.clone() }
-                document::Meta { name: "keywords", content: project.meta.tags.join(", ") }
-                document::Meta { name: "author", content: project.meta.author.clone() }
-                
-                // Open Graph / Facebook
-                document::Meta { property: "og:title", content: project.meta.title.clone() }
-                document::Meta { property: "og:description", content: project.meta.description.clone() }
-                document::Meta { property: "og:type", content: "article" }
-                document::Meta { property: "og:url", content: format!("https://imwoo90.github.io/the-rust-journey/projects/{}", project.meta.id) }
-                if !img_url.is_empty() {
-                    document::Meta { property: "og:image", content: img_url.clone() }
+                ProjectPostMeta {
+                    title: project.meta.title.clone(),
+                    description: project.meta.description.clone(),
+                    tags: project.meta.tags.clone(),
+                    author: project.meta.author.clone(),
+                    id: project.meta.id.clone(),
+                    img_url,
                 }
-                
-                // Twitter
-                document::Meta { name: "twitter:card", content: "summary_large_image" }
-                document::Meta { name: "twitter:title", content: project.meta.title.clone() }
-                document::Meta { name: "twitter:description", content: project.meta.description.clone() }
-                if !img_url.is_empty() {
-                    document::Meta { name: "twitter:image", content: img_url.clone() }
-                }
-
-                div { class: "layout-content-container flex flex-col w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16",
-                    article { class: "w-full max-w-3xl flex flex-col gap-10",
-                        DetailHero {
-                            title: project.meta.title.clone(),
-                            author: project.meta.author.clone(),
-                            date: project.meta.date.clone(),
-                            read_time: project.get_read_time(),
-                            back_link: Route::ProjectList {},
-                            back_label: "Projects".to_string(),
-                        }
-
-                        div {
-                            class: "prose max-w-none dark:prose-invert",
-                            dangerous_inner_html: "{html_content}",
-                        }
-
-                        ShareButtons { title: project.meta.title.clone() }
-
-                        if let Some(link) = &project.meta.link {
-                            div { class: "mt-8",
-                                a {
-                                    href: "{link}",
-                                    class: "inline-flex items-center gap-2 bg-primary-light text-text-dark px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all shadow-md active:scale-95",
-                                    target: "_blank",
-                                    span { class: "material-symbols-outlined", "launch" }
-                                    "{project.meta.link_text.clone().unwrap_or_else(|| \"Visit Project\".to_string())}"
-                                }
-                            }
-                        }
-
-                        Comments {}
-                    }
-                }
+                ProjectPostContent { project: project.clone(), html_content }
             }
         }
-        None => rsx! {
-            div { class: "flex flex-col items-center justify-center min-h-[60vh]",
-                h1 { class: "text-4xl font-bold", "Project Not Found" }
-                Link {
-                    to: Route::ProjectList {},
-                    class: "mt-4 text-primary-light hover:underline",
-                    "Back to Projects"
-                }
+        None => rsx! { ProjectNotFoundView {} },
+    }
+}
+
+/// Renders the external project launch action button.
+#[component]
+fn ProjectExternalAction(link: Option<String>, label: Option<String>) -> Element {
+    let Some(target_url) = link else {
+        return rsx! { "" };
+    };
+
+    let button_text = label.unwrap_or_else(|| "Visit Project".to_string());
+
+    rsx! {
+        div { class: "mt-8",
+            a {
+                href: "{target_url}",
+                class: "inline-flex items-center gap-2 bg-primary-light text-text-dark px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all shadow-md active:scale-95",
+                target: "_blank",
+                span { class: "material-symbols-outlined", "launch" }
+                "{button_text}"
             }
-        },
+        }
     }
 }

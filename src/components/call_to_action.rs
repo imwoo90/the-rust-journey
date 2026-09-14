@@ -1,5 +1,11 @@
+//! # Call To Action Banner Component
+//!
+//! Renders a prominent invitation banner encouraging collaboration and inquiries.
+//! Features an arrow-accented action link directing visitors toward the contact view.
+
 use dioxus::prelude::*;
 
+/// Prominent footer banner inviting readers to reach out with project ideas or inquiries.
 #[component]
 pub fn CallToAction() -> Element {
     rsx! {

@@ -1,5 +1,11 @@
+//! # Layout Primitives
+//!
+//! Provides structural layout containers including responsive centered content wrappers and section blocks.
+//! Ensures consistent margin, padding, and max-width boundaries across view templates.
+
 use dioxus::prelude::*;
 
+/// Constrained centered wrapper providing horizontal padding and max width.
 #[component]
 pub fn Container(children: Element, class: Option<String>) -> Element {
     let base_class =
@@ -15,6 +21,7 @@ pub fn Container(children: Element, class: Option<String>) -> Element {
     }
 }
 
+/// Generic vertical content section with standardized flex column gap spacing.
 #[component]
 pub fn Section(children: Element, class: Option<String>) -> Element {
     let combined_class = if let Some(extra) = class {

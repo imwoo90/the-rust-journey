@@ -1,3 +1,8 @@
+//! # Project Showcase Data Model and Asynchronous Ingestion
+//!
+//! Exposes structures and loaders for project entries, frontmatter metadata, and tag filters.
+//! Supports runtime WASM HTTP fetching via gloo-net and non-WASM filesystem reads for SSG.
+
 #[allow(unused_imports)]
 use crate::data::utils::{get_base_path, parse_frontmatter};
 use serde::{Deserialize, Serialize};
@@ -5,23 +10,35 @@ use serde::{Deserialize, Serialize};
 /// Metadata for a project, parsed from Markdown frontmatter.
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct ProjectMeta {
+    /// Unique URL slug identifier.
     #[serde(default)]
     pub id: String,
+    /// Project display title.
     pub title: String,
+    /// Project initial release date.
     pub date: String,
+    /// Author display name.
     pub author: String,
+    /// Short summary description for cards and SEO tags.
     pub description: String,
+    /// Primary thumbnail image URL or relative path.
     pub image_url: String,
+    /// Tech stack and categorization tags.
     pub tags: Vec<String>,
+    /// External project link (e.g. GitHub repository URL).
     pub link: Option<String>,
+    /// Display text for the external link button.
     pub link_text: Option<String>,
+    /// Optional internal route override.
     pub route: Option<String>,
 }
 
 /// A complete project entry including metadata and markdown content.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Project {
+    /// Frontmatter metadata.
     pub meta: ProjectMeta,
+    /// Raw Markdown body content.
     pub content: String,
 }
 
@@ -41,7 +58,6 @@ pub async fn fetch_all_projects() -> Vec<ProjectMeta> {
             Ok(resp) => resp.json().await.unwrap_or_default(),
             Err(_) => Vec::new(),
         };
-        // Sort by date descending
         projects.sort_by(|a, b| b.date.cmp(&a.date));
         projects
     }

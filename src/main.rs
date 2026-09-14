@@ -1,4 +1,8 @@
-// Main entry point for the Dioxus blog application
+//! # Application Entrypoint and Routing Table
+//!
+//! Configures top-level router hierarchy, static pre-rendering discovery,
+//! server-side static file serving, and browser client hydration shells.
+
 use dioxus::prelude::*;
 use views::{About, BlogList, BlogPost, Contact, Home, Navbar, NotFound, ProjectList, ProjectPost};
 
@@ -9,39 +13,58 @@ mod views;
 
 use data::constants::FAVICON;
 
+/// Top-level application routing table mapped to page view components.
 #[derive(Debug, Clone, Routable, PartialEq)]
 enum Route {
+    /// Home overview page.
     #[layout(Navbar)]
     #[route("/")]
     Home {},
 
+    /// Blog listing gallery.
     #[route("/blog")]
     BlogList {},
 
+    /// Detailed blog post view by slug.
     #[route("/blog/:id")]
-    BlogPost { id: String },
+    BlogPost {
+        /// Target article identifier.
+        id: String,
+    },
 
+    /// Projects portfolio listing.
     #[route("/projects")]
     ProjectList {},
 
+    /// Detailed project view by slug.
     #[route("/projects/:id")]
-    ProjectPost { id: String },
+    ProjectPost {
+        /// Target project identifier.
+        id: String,
+    },
 
+    /// Author biography and engineering philosophy.
     #[route("/about")]
     About {},
 
+    /// Contact inquiry form.
     #[route("/contact")]
     Contact {},
     #[end_layout]
+    /// Catch-all 404 handler.
     #[route("/:..segments")]
-    NotFound { segments: Vec<String> },
+    NotFound {
+        /// Unmatched URI path segments.
+        segments: Vec<String>,
+    },
 }
 
+/// Bundled Tailwind CSS stylesheet asset.
 const MAIN_CSS: Asset = asset!("assets/tailwind.css");
 
+/// Discovers static pre-render routes for SSG export.
 #[server(endpoint = "static_routes")]
 pub async fn static_routes() -> Result<Vec<String>, ServerFnError> {
-    println!("static_routes called. Cwd: {:?}", std::env::current_dir());
     let mut routes = vec![
         "/".to_string(),
         "/blog".to_string(),
@@ -54,44 +77,30 @@ pub async fn static_routes() -> Result<Vec<String>, ServerFnError> {
     let posts_dir = manifest_dir.join("public/content/posts");
     let projects_dir = manifest_dir.join("public/content/projects");
 
-    match std::fs::read_dir(&posts_dir) {
-        Ok(entries) => {
-            for entry in entries {
-                if let Ok(entry) = entry {
-                    if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
-                        if let Some(name) = entry.file_name().to_str() {
-                            routes.push(format!("/blog/{}", name));
-                        }
-                    }
+    if let Ok(entries) = std::fs::read_dir(&posts_dir) {
+        for entry in entries.flatten() {
+            if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
+                if let Some(name) = entry.file_name().to_str() {
+                    routes.push(format!("/blog/{}", name));
                 }
             }
         }
-        Err(e) => {
-            eprintln!("Failed to read {:?}: {:?}", posts_dir, e);
-        }
     }
 
-    match std::fs::read_dir(&projects_dir) {
-        Ok(entries) => {
-            for entry in entries {
-                if let Ok(entry) = entry {
-                    if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
-                        if let Some(name) = entry.file_name().to_str() {
-                            routes.push(format!("/projects/{}", name));
-                        }
-                    }
+    if let Ok(entries) = std::fs::read_dir(&projects_dir) {
+        for entry in entries.flatten() {
+            if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
+                if let Some(name) = entry.file_name().to_str() {
+                    routes.push(format!("/projects/{}", name));
                 }
             }
         }
-        Err(e) => {
-            eprintln!("Failed to read {:?}: {:?}", projects_dir, e);
-        }
     }
 
-    println!("static_routes returning: {:?}", routes);
     Ok(routes)
 }
 
+/// Normalizes GitHub Pages base path prefix on incoming server requests.
 #[cfg(feature = "server")]
 async fn strip_base_path(
     mut req: axum::http::Request<axum::body::Body>,
@@ -102,23 +111,25 @@ async fn strip_base_path(
     if path.starts_with("/the-rust-journey") {
         let new_path = &path["/the-rust-journey".len()..];
         let new_path = if new_path.is_empty() { "/" } else { new_path };
-        let mut parts = uri.into_parts();
+        let parts = uri.into_parts();
         let query = parts.path_and_query.as_ref().and_then(|pq| pq.query()).unwrap_or("");
         let new_pq = if query.is_empty() {
             new_path.to_string()
         } else {
             format!("{}?{}", new_path, query)
         };
-        let new_uri: axum::http::Uri = new_pq.parse().unwrap();
-        req.extensions_mut().insert(axum::extract::OriginalUri(new_uri.clone()));
-        *req.uri_mut() = new_uri;
+        if let Ok(new_uri) = new_pq.parse::<axum::http::Uri>() {
+            req.extensions_mut().insert(axum::extract::OriginalUri(new_uri.clone()));
+            *req.uri_mut() = new_uri;
+        }
     }
     next.run(req).await
 }
 
+/// Server entrypoint running Axum with Dioxus Fullstack SSR handler.
 #[cfg(feature = "server")]
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let static_dir = std::env::var("DIOXUS_PUBLIC_PATH")
         .map(std::path::PathBuf::from)
         .ok()
@@ -128,7 +139,7 @@ async fn main() {
                 .and_then(|p| p.parent().map(|parent| parent.join("public")))
         })
         .unwrap_or_else(|| std::path::PathBuf::from("./public"));
-    
+
     let incremental_cfg = dioxus::server::IncrementalRendererConfig::new()
         .static_dir(static_dir);
 
@@ -136,22 +147,24 @@ async fn main() {
         .incremental(incremental_cfg);
 
     let addr = dioxus_cli_config::fullstack_address_or_localhost();
-    
+
     use dioxus::server::DioxusRouterExt;
     let router = axum::Router::new()
         .serve_dioxus_application(serve_cfg.clone(), App)
         .layer(axum::middleware::from_fn(strip_base_path));
 
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
-    axum::serve(listener, router).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(addr).await?;
+    axum::serve(listener, router).await?;
+    Ok(())
 }
 
+/// Client entrypoint for browser WASM hydration.
 #[cfg(not(feature = "server"))]
 fn main() {
     dioxus::launch(App);
 }
 
-/// Detect initial theme (Pure Rust abstraction)
+/// Detects initial theme from localStorage or system color-scheme preference.
 fn get_initial_theme() -> bool {
     #[cfg(target_arch = "wasm32")]
     {
@@ -166,23 +179,20 @@ fn get_initial_theme() -> bool {
             }
         }
     }
-    // Default for Desktop/SSR
     false
 }
 
-/// Sync theme to storage and document root (Pure Rust abstraction)
+/// Synchronizes the theme state to the DOM document element and persistent storage.
 #[warn(unused_variables)]
 fn sync_theme(_is_dark: bool) {
     #[cfg(target_arch = "wasm32")]
     {
         if let Some(window) = web_sys::window() {
-            // 1. Sync with document root (html tag) so that body background and Tailwind variants work correctly
             if let Some(document) = window.document() {
                 if let Some(root) = document.document_element() {
                     let _ = root.class_list().toggle_with_force("dark", _is_dark);
                 }
             }
-            // 2. Persist to localStorage
             if let Some(storage) = window.local_storage().ok().flatten() {
                 let _ = storage.set_item("theme", if _is_dark { "dark" } else { "light" });
             }
@@ -190,18 +200,16 @@ fn sync_theme(_is_dark: bool) {
     }
 }
 
+/// Root application shell providing global providers, scripts, fonts, and router layout.
 #[allow(non_snake_case)]
 #[component]
 fn App() -> Element {
     let is_dark = use_signal(get_initial_theme);
     use_context_provider(|| is_dark);
 
-    // Platform-agnostic effect
     use_effect(move || sync_theme(is_dark()));
 
     rsx! {
-
-        // Standard Links
         document::Link { rel: "preconnect", href: "https://fonts.googleapis.com" }
         document::Link {
             rel: "preconnect",
@@ -217,7 +225,6 @@ fn App() -> Element {
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_CSS }
 
-        // Root Wrapper: Reacts to is_dark signal
         div { class: if is_dark() { "dark" } else { "" },
             div { class: "bg-background-light dark:bg-background-dark text-text-dark dark:text-text-light min-h-screen transition-colors duration-300",
                 Router::<Route> {}

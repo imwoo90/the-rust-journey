@@ -1,6 +1,12 @@
+//! # Form and Input Components
+//!
+//! Provides reusable form inputs, text areas, primary action buttons, and search input bars.
+//! Encapsulates dark mode theme variants, interactive focus states, and input event handlers.
+
 use crate::Route;
 use dioxus::prelude::*;
 
+/// Primary call-to-action button supporting both internal route navigation and click handlers.
 #[component]
 pub fn PrimaryButton(
     text: String,
@@ -30,6 +36,7 @@ pub fn PrimaryButton(
     }
 }
 
+/// Standard labeled text input field with focus ring transitions.
 #[component]
 pub fn Input(
     label: Option<String>,
@@ -66,6 +73,7 @@ pub fn Input(
     }
 }
 
+/// Multi-line text area component for longer narrative feedback and contact messages.
 #[component]
 pub fn TextArea(
     label: Option<String>,
@@ -102,6 +110,7 @@ pub fn TextArea(
     }
 }
 
+/// Icon-prefixed search input bar for live filtering in content galleries.
 #[component]
 pub fn SearchBar(placeholder: String, value: String, oninput: EventHandler<FormEvent>) -> Element {
     rsx! {

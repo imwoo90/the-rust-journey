@@ -1,6 +1,12 @@
+//! # Hero Header Components
+//!
+//! Provides top-level visual headers for index galleries and detailed article views.
+//! Includes breadcrumb navigation, author attribution, dates, and estimated reading times.
+
 use crate::Route;
 use dioxus::prelude::*;
 
+/// Primary landing or gallery hero header with optional subtitle and centered alignment.
 #[component]
 pub fn Hero(
     title: String,
@@ -32,6 +38,7 @@ pub fn Hero(
     }
 }
 
+/// Detailed post/project hero header featuring breadcrumbs, metadata, and author info.
 #[component]
 pub fn DetailHero(
     title: String,

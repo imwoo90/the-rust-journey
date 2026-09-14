@@ -1,3 +1,8 @@
+//! # Blog Post Data Model and Asynchronous Ingestion
+//!
+//! Exposes structures and loaders for blog articles, post metadata, and category derivation.
+//! Supports runtime WASM HTTP fetching via gloo-net and non-WASM filesystem reads for SSG.
+
 #[allow(unused_imports)]
 use crate::data::utils::{get_base_path, parse_frontmatter};
 use serde::{Deserialize, Serialize};
@@ -5,22 +10,33 @@ use serde::{Deserialize, Serialize};
 /// Metadata for a blog post.
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct PostMeta {
+    /// Unique URL slug identifier.
     #[serde(default)]
     pub id: String,
+    /// Article title.
     pub title: String,
+    /// Publication date in ISO-8601 or YYYY-MM-DD format.
     pub date: String,
+    /// Author display name.
     pub author: String,
+    /// Short summary description for cards and SEO tags.
     pub description: String,
+    /// Primary thumbnail image URL or relative path.
     pub image_url: String,
+    /// Classification keyword tags.
     pub tags: Vec<String>,
+    /// Optional parent series name.
     pub series: Option<String>,
+    /// Optional index order within the parent series.
     pub series_order: Option<i32>,
 }
 
 /// A complete blog post including metadata and markdown content.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Post {
+    /// Frontmatter metadata.
     pub meta: PostMeta,
+    /// Raw Markdown body content.
     pub content: String,
 }
 
@@ -40,7 +56,6 @@ pub async fn fetch_all_posts() -> Vec<PostMeta> {
             Ok(resp) => resp.json().await.unwrap_or_default(),
             Err(_) => Vec::new(),
         };
-        // Sort by date descending
         posts.sort_by(|a, b| b.date.cmp(&a.date));
         posts
     }

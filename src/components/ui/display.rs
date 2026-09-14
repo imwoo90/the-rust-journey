@@ -1,5 +1,11 @@
+//! # Data Display Components
+//!
+//! Provides SectionTitle headers, vertical chronological TimelineItem views,
+//! and scrollable horizontal CategoryFilter chip bars with active state styling.
+
 use dioxus::prelude::*;
 
+/// Prominent section header with lower border styling.
 #[component]
 pub fn SectionTitle(title: String) -> Element {
     rsx! {
@@ -9,6 +15,7 @@ pub fn SectionTitle(title: String) -> Element {
     }
 }
 
+/// Chronological resume or milestones timeline item with left-side marker bullet.
 #[component]
 pub fn TimelineItem(
     date: String,
@@ -38,6 +45,28 @@ pub fn TimelineItem(
 }
 
 #[component]
+fn CategoryChip(label: String, is_active: bool, onclick: EventHandler<MouseEvent>) -> Element {
+    let base = "px-4 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap";
+    let active_class = if is_active {
+        format!("{} bg-text-dark/10 dark:bg-white/10 text-text-dark dark:text-white", base)
+    } else {
+        format!(
+            "{} bg-transparent text-text-dark/60 dark:text-gray-400 hover:bg-text-dark/10 dark:hover:bg-white/10 hover:text-text-dark dark:hover:text-white",
+            base
+        )
+    };
+
+    rsx! {
+        button {
+            class: "{active_class}",
+            onclick: move |e| onclick.call(e),
+            "{label}"
+        }
+    }
+}
+
+/// Scrollable tag chip bar for filtering gallery items by category.
+#[component]
 pub fn CategoryFilter(
     categories: Vec<String>,
     active: String,
@@ -52,45 +81,19 @@ pub fn CategoryFilter(
         }
         div { class: "w-full md:w-auto overflow-x-auto no-scrollbar py-2",
             div { class: "flex flex-nowrap md:flex-wrap gap-2 justify-start md:justify-center min-w-max md:min-w-0",
-                button {
-                    class: {
-                        let base = "px-4 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap";
-                        if active == "All" {
-                            format!(
-                                "{} bg-text-dark/10 dark:bg-white/10 text-text-dark dark:text-white",
-                                base,
-                            )
-                        } else {
-                            format!(
-                                "{} bg-transparent text-text-dark/60 dark:text-gray-400 hover:bg-text-dark/10 dark:hover:bg-white/10 hover:text-text-dark dark:hover:text-white",
-                                base,
-                            )
-                        }
-                    },
+                CategoryChip {
+                    label: "All".to_string(),
+                    is_active: active == "All",
                     onclick: move |_| onchange.call("All".to_string()),
-                    "All"
                 }
                 for cat in categories {
-                    button {
-                        class: {
-                            let base = "px-4 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap";
-                            if active == cat {
-                                format!(
-                                    "{} bg-text-dark/10 dark:bg-white/10 text-text-dark dark:text-white",
-                                    base,
-                                )
-                            } else {
-                                format!(
-                                    "{} bg-transparent text-text-dark/60 dark:text-gray-400 hover:bg-text-dark/10 dark:hover:bg-white/10 hover:text-text-dark dark:hover:text-white",
-                                    base,
-                                )
-                            }
-                        },
+                    CategoryChip {
+                        label: cat.clone(),
+                        is_active: active == cat,
                         onclick: {
-                            let cat = cat.clone();
-                            move |_| onchange.call(cat.clone())
+                            let cat_val = cat.clone();
+                            move |_| onchange.call(cat_val.clone())
                         },
-                        "{cat}"
                     }
                 }
             }
