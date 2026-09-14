@@ -38,3 +38,13 @@ One of the main goals of this project was to make it truly "plug and play." By u
 - **No manual edits** needed in `Dioxus.toml` for deployment.
 - **Dynamic asset loading** that works everywhere.
 - **Automated GitHub Actions** that handle the build, base-tag injection, and deployment.
+
+---
+
+## ⚡ 2026 Upgrade: Rust 2024 & Agent-Native Architecture
+
+This template has evolved alongside the Rust and AI ecosystems:
+* **Rust 2024 Edition**: Native support for modern Rust constructs including let-chains.
+* **Agent-Native Compile-Time Guardrails**: Incorporates the [Rust Agent-Native Template](https://github.com/imwoo90/rust-agent-native-template), enforcing Rule 1–4 character budgets, zero-unwrap production safety, and Living LLM-Wiki standards directly in `build.rs`.
+* **Playwright Interactive E2E Verification**: Ships with a comprehensive 25-checkpoint headless browser verification suite verifying full SPA routing, theme synchronization, form state transitions, and responsive mobile drawers.
+
