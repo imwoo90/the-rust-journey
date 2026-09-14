@@ -70,4 +70,15 @@ These agents didn't just give me the answers in one shot, but they helped me ite
 The journey continues, and it's becoming clear: with Rust's performance and AI's ability to bridge ecosystem gaps, the possibilities for what we can build in the browser are truly limitless.
 
 ---
+
+## 🔄 September 2026 Update: Agent-Native Refactoring & Playwright E2E
+
+Months after initial deployment, maintaining high-velocity features in RusTerm while working alongside autonomous AI agents required another architectural leap forward. 
+
+We adopted the [**Rust Agent-Native Template**](https://github.com/imwoo90/rust-agent-native-template):
+1. **Compile-Time AST Limits**: Integrated `build_linter.rs` directly into `build.rs`. All worker state machines and Dioxus UI components were refactored into modular submodules under 10,000 characters and functions under 2,000 characters.
+2. **Zero-Unwrap Standard**: Replaced all residual `.unwrap()` and `.expect()` invocations across Web Worker message loops with strictly typed error channels.
+3. **Playwright E2E Verification Suite**: Introduced an automated, multi-checkpoint Playwright test runner simulating Web Serial device connections, virtual baud-rate switching, and ANSI escape sequence parsing to guarantee zero regressions during agent pair-programming sessions.
+
+---
 *Check out the [Source Code](https://github.com/imwoo90/rusterm) to see the new all-Rust worker architecture.*
