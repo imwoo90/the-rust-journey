@@ -1,6 +1,10 @@
 # Rust & Dioxus Blog for GitHub Pages
 ([this github pages](https://imwoo90.github.io/dioxus_github_pages_template/))
+
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 A high-performance, developer-centric blog template built with Rust and Dioxus, optimized for seamless deployment on GitHub Pages.
+
 
 ## 🚀 Features
 
@@ -126,4 +130,10 @@ This project is designed for **zero-configuration deployment** via GitHub Action
 ---
 
 Built with ❤️ using **Rust** and **Dioxus**.
+
+---
+
+## 📄 License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
 
