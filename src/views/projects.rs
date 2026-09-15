@@ -195,7 +195,7 @@ fn ProjectExternalAction(link: Option<String>, label: Option<String>) -> Element
         div { class: "mt-8",
             a {
                 href: "{target_url}",
-                class: "inline-flex items-center gap-2 bg-primary-light text-text-dark px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all shadow-md active:scale-95",
+                class: "inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all shadow-md active:scale-95",
                 target: "_blank",
                 span { class: "material-symbols-outlined", "launch" }
                 "{button_text}"

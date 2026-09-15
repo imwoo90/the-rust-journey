@@ -8,7 +8,7 @@
 //! #contact-info, #social-links, #author-profile, #sidebar
 
 use crate::components::SectionTitle;
-use crate::data::constants::{AUTHOR_EMAIL, AUTHOR_NAME, GITHUB_URL, GITHUB_USERNAME, LINKEDIN_URL};
+use crate::data::constants::{AUTHOR_EMAIL, GITHUB_URL, GITHUB_USERNAME};
 use dioxus::prelude::*;
 
 /// Renders author contact channels and social media profiles.
@@ -29,12 +29,6 @@ pub fn ContactSidebarInfo() -> Element {
                     label: "GitHub".to_string(),
                     value: format!("@{}", GITHUB_USERNAME),
                     href: GITHUB_URL.to_string(),
-                }
-                ContactInfoItem {
-                    icon: "group".to_string(),
-                    label: "LinkedIn".to_string(),
-                    value: AUTHOR_NAME.to_string(),
-                    href: LINKEDIN_URL.to_string(),
                 }
             }
         }

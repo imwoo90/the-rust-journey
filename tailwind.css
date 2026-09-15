@@ -3,21 +3,23 @@
 
 @theme {
     /* Colors */
-    --color-primary: #ec5b13;
-    --color-primary-light: #DEA584;
-    --color-background-light: #f8f6f6;
-    --color-background-dark: #1E1E1E;
-    --color-background-darker: #121212;
-    --color-surface-dark: #2d1f18;
-    --color-surface-border: #482f23;
+    --color-primary: #f97316;
+    --color-primary-hover: #ea580c;
+    --color-primary-light: #fdba74;
+    --color-background-light: #fafafa;
+    --color-background-dark: #09090b;
+    --color-background-darker: #09090b;
+    --color-surface-dark: #18181b;
+    --color-surface-border: #27272a;
     --color-text-light: #D4D4D4;
     --color-text-dark: #1E1E1E;
     --color-text-heading: #FFFFFF;
     --color-border-dark: rgba(255, 255, 255, 0.1);
 
     /* Fonts */
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "JetBrains Mono", "Roboto Mono", monospace;
     --font-display: "Inter", sans-serif;
-    --font-mono: "Fira Code", "Roboto Mono", monospace;
 
     /* Border Radius */
     --radius-md: 0.375rem;
@@ -28,6 +30,7 @@
 
 @layer base {
     body {
+        font-family: var(--font-sans);
         @apply bg-background-light text-text-dark dark:bg-background-dark dark:text-text-light transition-colors duration-300;
     }
 }
@@ -66,7 +69,7 @@
 }
 
 .prose pre {
-    @apply bg-[#1E1E1E] border border-white/5 p-8 rounded-2xl overflow-x-auto my-8 shadow-2xl;
+    @apply bg-[#18181b] border border-white/5 p-8 rounded-2xl overflow-x-auto my-8 shadow-2xl;
     /* Force high-contrast light text inside pre blocks */
     color: #e4e4e7;
     font-size: 0.95rem;

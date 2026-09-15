@@ -27,8 +27,8 @@ pub const GITHUB_USERNAME: &str = "imwoo90";
 /// Full URL to the author's GitHub profile.
 pub const GITHUB_URL: &str = "https://github.com/imwoo90";
 
-/// Full URL to the author's LinkedIn profile.
-pub const LINKEDIN_URL: &str = "https://linkedin.com";
+/// Canonical asset path for the developer avatar mascot.
+pub const AVATAR: Asset = asset!("assets/avatar.jpg");
 
 /// Copyright year shown in footer and legal notices.
 pub const COPYRIGHT_YEAR: &str = "2026";

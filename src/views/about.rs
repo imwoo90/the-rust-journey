@@ -8,10 +8,10 @@
 //! #about, #biography, #skills, #timeline, #career
 
 use crate::components::{Badge, Container, Section, SectionTitle, TimelineItem};
-use crate::data::constants::{APP_TITLE, AUTHOR_NAME};
+use crate::data::constants::{APP_TITLE, AUTHOR_NAME, AVATAR};
 use dioxus::prelude::*;
 
-const HEADSHOT_SRC: &str = "https://lh3.googleusercontent.com/aida-public/AB6AXuAPY0CCVN_4GL3-hGi_oTrltehQY07eSFKotu0R7VEFER7S3HpAsYPIVhi9tPeKSEfsqsbJDH-pUOecDZ1_9LKTtOUxtVEzozK1Mg5PTH34O5gL4fQqpGTXDDdohpSDkoCMHma6B6i_LW633qtLmpDbSQRBMyRE_h90oqvCdv2jK4_ToQG3ZlHKwnorWLecafDGcNgiVkbjeGfDCyqoR6ADi6nytdDEqrwSVszYU0i1h-BRbHH4V5fdVO9QZZq5i0QXVNIKKabPaWwV";
+const HEADSHOT_SRC: Asset = AVATAR;
 
 #[component]
 fn AboutProfileHeader() -> Element {
@@ -21,7 +21,7 @@ fn AboutProfileHeader() -> Element {
                 img {
                     class: "w-full h-full rounded-full object-cover border-4 border-primary-light/50 shadow-lg",
                     src: HEADSHOT_SRC,
-                    alt: "Professional headshot of the developer",
+                    alt: "Wim's developer mascot avatar",
                 }
             }
             div { class: "flex flex-col gap-4 text-center md:text-left",
@@ -84,29 +84,24 @@ struct JourneyMilestone {
 
 const MILESTONES: &[JourneyMilestone] = &[
     JourneyMilestone {
-        date: "2026",
-        title: "Creator & Architect, Tuner & Rust Agent-Native Template",
-        description: "Engineered Tuner, an autonomous Rust agent supervisor, and open-sourced the Rust Agent-Native Template enforcing 'Code as Documentation' and compile-time AST budgets.",
+        date: "2024–Present",
+        title: "Agentic Tooling & System Interfaces",
+        description: "Architecting autonomous Rust agent workflows with Tuner, zero-driver browser hardware monitoring with Web Serial (RusTerm), and establishing Agent-Native compile-time quality standards.",
     },
     JourneyMilestone {
-        date: "2022 - Present",
-        title: "Lead Embedded Engineer, Innovatech Dynamics",
-        description: "Architected and developed a new generation of IoT devices, migrating the entire firmware from C to Rust. Achieved a 40% reduction in memory usage and eliminated a whole class of memory corruption bugs.",
+        date: "2021–2024",
+        title: "Embedded Systems & WASM Integration",
+        description: "Bridging bare-metal MCUs with modern browser-based tooling. Pioneered high-performance WebAssembly interfaces and data pipelines connecting hardware serial protocols directly to client applications.",
     },
     JourneyMilestone {
-        date: "2020 - 2022",
-        title: "Full-Stack Developer, QuantumLeap Solutions",
-        description: "Built high-performance backend services in Rust and explored its potential for frontend development using WebAssembly, creating interactive data visualization tools that ran entirely in the browser.",
+        date: "2018–2021",
+        title: "Firmware & RTOS Engineering",
+        description: "Engineered mission-critical MCU firmware in C and modern C++, implementing real-time operating systems (RTOS), serial communication protocols (UART, SPI, I2C), and hardened device drivers for industrial applications.",
     },
     JourneyMilestone {
-        date: "2018",
-        title: "The Spark: Discovering Rust",
-        description: "While working on a complex C++ project, I discovered Rust. Its promise of safety without sacrificing performance was a revelation that set the course for my entire career.",
-    },
-    JourneyMilestone {
-        date: "2016 - 2018",
-        title: "Firmware Engineer, Core Systems Inc.",
-        description: "My professional journey began here, writing C and C++ for industrial control systems. It was here I learned the criticality of robust, reliable code in resource-constrained environments.",
+        date: "2014–2018",
+        title: "Hardware Bring-Up & Embedded Programming",
+        description: "Specialized in board bring-up, peripheral interfacing, and low-level debugging with oscilloscopes and logic analyzers, developing resilient control loops and embedded systems foundations.",
     },
 ];
 

@@ -17,7 +17,7 @@ pub fn PrimaryButton(
     to: Option<Route>,
     onclick: Option<EventHandler<MouseEvent>>,
 ) -> Element {
-    let class = "flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary-light text-text-dark text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-all active:scale-95 shadow-md hover:shadow-lg";
+    let class = "flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-semibold leading-normal tracking-[0.015em] hover:bg-primary-hover transition-all active:scale-95 shadow-md hover:shadow-lg";
 
     if let Some(route) = to.clone() {
         rsx! {
@@ -123,7 +123,7 @@ pub fn SearchBar(placeholder: String, value: String, oninput: EventHandler<FormE
                 "search"
             }
             input {
-                class: "w-full bg-white dark:bg-[#2a2a2a] border border-text-dark/10 dark:border-white/10 rounded-md h-12 pl-10 pr-4 text-text-dark dark:text-white placeholder:text-text-dark/40 dark:placeholder:text-gray-400 focus:ring-primary-light focus:border-primary-light transition-all",
+                class: "w-full bg-white dark:bg-surface-dark border border-text-dark/10 dark:border-white/10 rounded-md h-12 pl-10 pr-4 text-text-dark dark:text-white placeholder:text-text-dark/40 dark:placeholder:text-gray-400 focus:ring-primary-light focus:border-primary-light transition-all",
                 placeholder: "{placeholder}",
                 r#type: "text",
                 value: "{value}",

@@ -69,14 +69,14 @@ fn ContactSubmitButton(status: Signal<String>) -> Element {
         div { class: "flex justify-start",
             if status() == "submitting" {
                 button {
-                    class: "flex min-w-[150px] items-center justify-center rounded-lg h-12 px-6 bg-primary-light/50 text-text-dark text-base font-bold cursor-not-allowed shadow-md",
+                    class: "flex min-w-[150px] items-center justify-center rounded-lg h-12 px-6 bg-primary/50 text-white/80 text-base font-semibold cursor-not-allowed shadow-md",
                     disabled: true,
-                    span { class: "animate-spin mr-2 h-5 w-5 border-2 border-text-dark border-t-transparent rounded-full" }
+                    span { class: "animate-spin mr-2 h-5 w-5 border-2 border-white border-t-transparent rounded-full" }
                     "Sending..."
                 }
             } else {
                 button {
-                    class: "flex min-w-[150px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary-light text-text-dark text-base font-bold hover:opacity-90 active:scale-95 transition-all shadow-md hover:shadow-lg",
+                    class: "flex min-w-[150px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-semibold hover:bg-primary-hover active:scale-95 transition-all shadow-md hover:shadow-lg",
                     r#type: "submit",
                     "Submit Message"
                 }

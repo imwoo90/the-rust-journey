@@ -43,7 +43,7 @@ fn ContactSuccessView(on_reset: EventHandler<()>) -> Element {
                 "Thank you for reaching out! I appreciate you taking the time to write, and I will get back to you as soon as possible."
             }
             button {
-                class: "flex cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary-light text-text-dark text-base font-bold hover:opacity-90 active:scale-95 transition-all shadow-md",
+                class: "flex cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-semibold hover:bg-primary-hover active:scale-95 transition-all shadow-md",
                 onclick: move |_| on_reset.call(()),
                 "Send Another Message"
             }
@@ -61,7 +61,7 @@ fn ContactFormCard(
     on_submit: EventHandler<FormEvent>,
 ) -> Element {
     rsx! {
-        div { class: "md:col-span-2 bg-white dark:bg-[#2a2a2a] p-8 rounded-lg border border-text-dark/5 dark:border-white/10 transition-colors shadow-sm",
+        div { class: "md:col-span-2 bg-white dark:bg-surface-dark p-8 rounded-lg border border-text-dark/5 dark:border-white/10 transition-colors shadow-sm",
             if status() == "success" {
                 ContactSuccessView {
                     on_reset: move |_| {

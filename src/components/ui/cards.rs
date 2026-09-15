@@ -55,7 +55,7 @@ pub fn Card(
     link_text: Option<String>,
 ) -> Element {
     let link_label = link_text.unwrap_or_else(|| "Read More".to_string());
-    let card_style = "flex flex-col rounded-lg overflow-hidden bg-white dark:bg-[#2a2a2a] border border-text-dark/5 dark:border-white/10 group transition-all duration-300 hover:shadow-lg dark:hover:bg-white/5";
+    let card_style = "flex flex-col rounded-lg overflow-hidden bg-white dark:bg-surface-dark border border-text-dark/5 dark:border-white/10 group transition-all duration-300 hover:shadow-lg dark:hover:bg-white/5";
 
     let body = rsx! {
         CardCoverImage { image_url }

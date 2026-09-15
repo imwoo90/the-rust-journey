@@ -15,7 +15,7 @@ use dioxus::prelude::*;
 #[component]
 fn TerminalWindowHeader() -> Element {
     rsx! {
-        div { class: "bg-[#1a110c] dark:bg-[#0a0a0a] px-4 py-2 border-b border-surface-border dark:border-white/10 flex items-center gap-2",
+        div { class: "bg-background-dark px-4 py-2 border-b border-surface-border dark:border-white/10 flex items-center gap-2",
             div { class: "w-3 h-3 rounded-full bg-red-500" }
             div { class: "w-3 h-3 rounded-full bg-yellow-500" }
             div { class: "w-3 h-3 rounded-full bg-green-500" }
@@ -29,7 +29,7 @@ fn TerminalWindowHeader() -> Element {
 #[component]
 fn TerminalPanicMockup() -> Element {
     rsx! {
-        div { class: "w-full max-w-2xl bg-surface-dark dark:bg-background-darker border border-surface-border dark:border-white/10 rounded-xl shadow-2xl overflow-hidden mb-12",
+        div { class: "w-full max-w-2xl bg-surface-dark border border-surface-border dark:border-white/10 rounded-xl shadow-2xl overflow-hidden mb-12",
             TerminalWindowHeader {}
             div { class: "p-6 md:p-10 font-mono text-sm md:text-base leading-relaxed text-gray-300",
                 div { class: "flex gap-3 mb-2",
@@ -53,7 +53,7 @@ fn NotFoundMessage() -> Element {
     rsx! {
         div { class: "text-center space-y-6 max-w-[600px]",
             h1 { class: "text-4xl md:text-5xl font-bold text-text-dark dark:text-white tracking-tight transition-colors",
-                span { class: "text-primary-light", "panic!" }
+                span { class: "text-primary dark:text-primary-light", "panic!" }
                 "(\"Lost in memory\");"
             }
             p { class: "text-text-dark/60 dark:text-gray-400 text-lg leading-relaxed transition-colors",

@@ -1,11 +1,11 @@
 //! # Home Landing Page View
 //!
 //! ## Overview
-//! Provides the primary landing view showcasing recent blog posts and featured projects,
-//! personal engineering philosophy, and direct call-to-action triggers toward the contact view.
+//! Provides the primary landing view showcasing the flagship RusTerm Web Serial project banner,
+//! recent blog posts and portfolio projects, personal engineering philosophy, and contact call-to-actions.
 //!
 //! ## Search Tags
-//! #home, #landing, #featured-posts, #featured-projects, #hero
+//! #home, #landing, #featured-banner, #rusterm, #web-serial, #embedded, #wasm
 
 use crate::components::*;
 use crate::data::blog::{fetch_all_posts, PostMeta};
@@ -20,6 +20,79 @@ fn HomeHero() -> Element {
     rsx! {
         Hero { title: "{APP_TITLE}", subtitle: "{APP_SUBTITLE}",
             PrimaryButton { to: Route::BlogList {}, text: "Explore the Blog" }
+        }
+    }
+}
+
+#[component]
+fn RusTermActions() -> Element {
+    rsx! {
+        div { class: "flex flex-col gap-3 w-full md:w-auto flex-shrink-0",
+            a {
+                class: "flex min-w-[84px] cursor-pointer items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary hover:bg-primary-hover text-white text-base font-semibold transition-all shadow-md active:scale-95 text-center",
+                href: "https://imwoo90.github.io/RusTerm/",
+                target: "_blank",
+                rel: "noopener noreferrer",
+                "Launch Web Monitor 🚀"
+            }
+            a {
+                class: "flex min-w-[84px] cursor-pointer items-center justify-center gap-2 rounded-lg h-12 px-6 border border-text-dark/10 dark:border-white/10 hover:border-primary-light text-text-dark dark:text-white hover:bg-text-dark/5 dark:hover:bg-white/5 text-base font-semibold transition-all active:scale-95 text-center",
+                href: "https://github.com/imwoo90/RusTerm",
+                target: "_blank",
+                rel: "noopener noreferrer",
+                span { class: "material-symbols-outlined text-base", "code" }
+                "GitHub Repository"
+            }
+        }
+    }
+}
+
+#[component]
+fn RusTermBadges() -> Element {
+    rsx! {
+        div { class: "flex flex-wrap items-center gap-2",
+            Badge { text: "Rust".to_string() }
+            Badge { text: "WebAssembly".to_string() }
+            Badge { text: "Web Serial API".to_string() }
+            Badge { text: "Embedded Systems".to_string() }
+            Badge { text: "OPFS".to_string() }
+        }
+    }
+}
+
+#[component]
+fn RusTermContent() -> Element {
+    rsx! {
+        div { class: "flex flex-col gap-4 max-w-2xl flex-1",
+            div { class: "flex flex-wrap items-center gap-2",
+                span { class: "text-xs font-mono font-bold uppercase tracking-wider bg-primary text-white px-2.5 py-1 rounded-full",
+                    "Flagship Project"
+                }
+                span { class: "text-xs font-mono bg-text-dark/5 dark:bg-white/10 text-text-dark/70 dark:text-gray-300 px-2 py-1 rounded",
+                    "Zero-Driver Web Serial"
+                }
+            }
+            div { class: "flex flex-col gap-2",
+                h2 { class: "text-2xl md:text-3xl font-extrabold text-text-dark dark:text-white tracking-tight",
+                    "RusTerm: Zero-Driver Web Serial Monitor"
+                }
+                p { class: "text-text-dark/80 dark:text-[#D4D4D4] text-base leading-relaxed",
+                    "Bridging bare-metal hardware and WebAssembly. An installation-free serial monitor running live in the browser via Rust, WASM, and Web Workers—stream real-time MCU telemetry without installing native desktop drivers or toolchains."
+                }
+            }
+            RusTermBadges {}
+        }
+    }
+}
+
+#[component]
+fn RusTermBanner() -> Element {
+    rsx! {
+        section { class: "relative overflow-hidden rounded-2xl bg-white dark:bg-surface-dark border border-primary-light/30 p-8 md:p-10 shadow-lg transition-colors",
+            div { class: "flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12",
+                RusTermContent {}
+                RusTermActions {}
+            }
         }
     }
 }
@@ -110,6 +183,7 @@ pub fn Home() -> Element {
             Container {
                 main { class: "flex flex-col gap-16 md:gap-24 mt-8 md:mt-16",
                     HomeHero {}
+                    RusTermBanner {}
                     LatestSection { posts: posts.clone(), projects: projects.clone() }
                     HomeCta {}
                 }
