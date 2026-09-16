@@ -36,6 +36,10 @@ jobs:
           mkdir -p docs
           cp -r target/dx/my_blog/release/web/public/* docs/
           
+          # Ensure sitemap.xml and robots.txt are copied to root of docs
+          cp public/sitemap.xml docs/
+          cp public/robots.txt docs/
+          
           # Disable Jekyll processing for GitHub Pages
           touch docs/.nojekyll
           

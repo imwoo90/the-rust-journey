@@ -234,6 +234,15 @@ fn App() -> Element {
         document::Script { src: "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" }
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_CSS }
+        document::Meta {
+            name: "google-site-verification",
+            content: "Z60MMCKeg9laVsPok7iQuQWayuy9ptB0kgrC2AgGh3s",
+        }
+        document::Meta { name: "robots", content: "index, follow" }
+        document::Meta {
+            name: "googlebot",
+            content: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+        }
 
         div { class: if is_dark() { "dark" } else { "" },
             div { class: "bg-background-light dark:bg-background-dark text-text-dark dark:text-text-light min-h-screen transition-colors duration-300",

@@ -12,7 +12,7 @@ use std::path::Path;
 mod build_linter;
 
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct PostMeta {
     #[serde(default)]
     id: String,
@@ -26,7 +26,7 @@ struct PostMeta {
     series_order: Option<i32>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct ProjectMeta {
     #[serde(default)]
     id: String,
@@ -47,23 +47,25 @@ fn main() {
     println!("cargo:rerun-if-changed=public/content/posts");
     println!("cargo:rerun-if-changed=public/content/projects");
 
-
-    generate_index(
+    let posts = generate_index(
         "public/content/posts",
         "public/content/posts_index.json",
         parse_post_meta,
     );
-    generate_index(
+    let projects = generate_index(
         "public/content/projects",
         "public/content/projects_index.json",
         parse_project_meta,
     );
+
+    generate_sitemap(&posts, &projects);
+    generate_robots();
 }
 
-fn generate_index<F, T>(dir_path: &str, output_path: &str, parser: F)
+fn generate_index<F, T>(dir_path: &str, output_path: &str, parser: F) -> Vec<T>
 where
     F: Fn(&str, &str) -> Option<T>,
-    T: Serialize,
+    T: Serialize + Clone,
 {
     let mut items = Vec::new();
     let dir = Path::new(dir_path);
@@ -94,6 +96,65 @@ where
 
     if should_write {
         fs::write(output_path, json).unwrap();
+    }
+
+    items
+}
+
+fn generate_sitemap(posts: &[PostMeta], projects: &[ProjectMeta]) {
+    let mut xml = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    xml.push_str("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+
+    let base = "https://imwoo90.github.io/the-rust-journey";
+    let static_routes = [
+        ("/", "1.0", "daily"),
+        ("/blog", "0.9", "daily"),
+        ("/projects", "0.9", "weekly"),
+        ("/about", "0.7", "monthly"),
+        ("/contact", "0.6", "monthly"),
+    ];
+
+    for (route, priority, freq) in static_routes {
+        xml.push_str(&format!(
+            "  <url>\n    <loc>{base}{route}</loc>\n    <changefreq>{freq}</changefreq>\n    <priority>{priority}</priority>\n  </url>\n"
+        ));
+    }
+
+    for post in posts {
+        xml.push_str(&format!(
+            "  <url>\n    <loc>{base}/blog/{}</loc>\n    <lastmod>{}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n",
+            post.id, post.date
+        ));
+    }
+
+    for project in projects {
+        xml.push_str(&format!(
+            "  <url>\n    <loc>{base}/projects/{}</loc>\n    <lastmod>{}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n",
+            project.id, project.date
+        ));
+    }
+
+    xml.push_str("</urlset>\n");
+
+    let output_path = "public/sitemap.xml";
+    let should_write = match fs::read_to_string(output_path) {
+        Ok(existing) => existing != xml,
+        Err(_) => true,
+    };
+    if should_write {
+        fs::write(output_path, xml).unwrap();
+    }
+}
+
+fn generate_robots() {
+    let robots = "User-agent: *\nAllow: /\n\nSitemap: https://imwoo90.github.io/the-rust-journey/sitemap.xml\n";
+    let output_path = "public/robots.txt";
+    let should_write = match fs::read_to_string(output_path) {
+        Ok(existing) => existing != robots,
+        Err(_) => true,
+    };
+    if should_write {
+        fs::write(output_path, robots).unwrap();
     }
 }
 

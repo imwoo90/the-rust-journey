@@ -180,6 +180,11 @@ pub fn Home() -> Element {
     if let (Some(posts), Some(projects)) = (posts_guard.as_ref(), projects_guard.as_ref()) {
         rsx! {
             document::Title { "{APP_TITLE}" }
+            document::Link {
+                rel: "canonical",
+                href: "https://imwoo90.github.io/the-rust-journey/",
+            }
+            document::Meta { name: "description", content: "{APP_SUBTITLE}" }
             Container {
                 main { class: "flex flex-col gap-16 md:gap-24 mt-8 md:mt-16",
                     HomeHero {}

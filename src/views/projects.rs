@@ -77,6 +77,10 @@ fn ProjectPostMeta(
 ) -> Element {
     rsx! {
         document::Title { "{title} - {APP_TITLE}" }
+        document::Link {
+            rel: "canonical",
+            href: format!("https://imwoo90.github.io/the-rust-journey/projects/{}", id),
+        }
         document::Meta { name: "description", content: description.clone() }
         document::Meta { name: "keywords", content: tags.join(", ") }
         document::Meta { name: "author", content: author }
