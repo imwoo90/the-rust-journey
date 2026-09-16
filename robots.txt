@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://imwoo90.github.io/the-rust-journey/sitemap.xml
