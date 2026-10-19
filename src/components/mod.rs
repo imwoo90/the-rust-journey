@@ -5,11 +5,11 @@
 //! Re-exports UI primitives from the `ui` submodule to streamline view assembly.
 //!
 //! ## Submodules
-//! - [`call_to_action`]: Call-to-action banners and conversion prompt blocks.
-//! - [`comments`]: Utterances-based GitHub issue commenting integration widget.
-//! - [`gallery`]: Paginated or categorized media and post card gallery grids.
-//! - [`share_buttons`]: Social platform sharing triggers and link copy utilities.
-//! - [`ui`]: Foundational design system primitives, cards, buttons, and layout containers.
+//! - [`call_to_action`] (`call_to_action.rs`): Call-to-action banners and conversion prompt blocks.
+//! - [`comments`] (`comments.rs`): Utterances-based GitHub issue commenting integration widget.
+//! - [`gallery`] (`gallery.rs`): Paginated or categorized media and post card gallery grids.
+//! - [`share_buttons`] (`share_buttons.rs`): Social platform sharing triggers and link copy utilities.
+//! - [`ui`] (`ui/mod.rs`): Foundational design system primitives, cards, buttons, and layout containers.
 //!
 //! ## Search Tags
 //! #components, #widgets, #gallery, #comments, #share-buttons

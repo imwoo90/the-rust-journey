@@ -5,14 +5,14 @@
 //! Includes Home, Blog, Projects, About, Contact, 404 NotFound, and global navigation layouts.
 //!
 //! ## Submodules
-//! - [`about`]: Biography, engineering background, skill matrix, and experience timeline.
-//! - [`blog`]: Paginated blog article directory and full-content markdown reading views.
-//! - [`contact`]: Interactive contact message form and developer coordination sidebar.
-//! - [`footer`]: Global persistent site footer with copyright, links, and social anchors.
-//! - [`home`]: Primary landing view showcasing recent articles, projects, and mission statement.
-//! - [`navbar`]: Persistent responsive navigation bar, mobile menu drawer, and theme toggler.
-//! - [`not_found`]: Custom 404 panic fallback view with recovery links to homepage.
-//! - [`projects`]: Showcase project catalog grid and individual case-study view templates.
+//! - [`about`] (`about.rs`): Biography, engineering background, skill matrix, and experience timeline.
+//! - [`blog`] (`blog.rs`): Paginated blog article directory and full-content markdown reading views.
+//! - [`contact`] (`contact/mod.rs`): Interactive contact message form and developer coordination sidebar.
+//! - [`footer`] (`footer.rs`): Global persistent site footer with copyright, links, and social anchors.
+//! - [`home`] (`home.rs`): Primary landing view showcasing recent articles, projects, and mission statement.
+//! - [`navbar`] (`navbar.rs`): Persistent responsive navigation bar, mobile menu drawer, and theme toggler.
+//! - [`not_found`] (`not_found.rs`): Custom 404 panic fallback view with recovery links to homepage.
+//! - [`projects`] (`projects.rs`): Showcase project catalog grid and individual case-study view templates.
 //!
 //! ## Search Tags
 //! #views, #routes, #pages, #navigation, #router-views

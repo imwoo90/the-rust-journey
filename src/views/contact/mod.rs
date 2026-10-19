@@ -5,8 +5,8 @@
 //! message transmission status transitions, and external communication coordinates.
 //!
 //! ## Submodules
-//! - [`form`]: Contact input state management, client-side validation, and submit dispatchers.
-//! - [`info`][`mod@info`]: Sidebar contact coordinates, social handles, and availability metadata.
+//! - [`form`] (`form.rs`): Contact input state management, client-side validation, and submit dispatchers.
+//! - [`info`][`mod@info`] (`info.rs`): Sidebar contact coordinates, social handles, and availability metadata.
 //!
 //! ## Search Tags
 //! #contact, #form-validation, #contact-info, #user-feedback
