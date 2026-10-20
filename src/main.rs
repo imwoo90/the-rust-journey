@@ -179,10 +179,10 @@ fn get_initial_theme() -> bool {
     #[cfg(target_arch = "wasm32")]
     {
         if let Some(window) = web_sys::window() {
-            if let Some(storage) = window.local_storage().ok().flatten() {
-                if let Ok(Some(saved)) = storage.get_item("theme") {
-                    return saved == "dark";
-                }
+            if let Some(storage) = window.local_storage().ok().flatten()
+                && let Ok(Some(saved)) = storage.get_item("theme")
+            {
+                return saved == "dark";
             }
             if let Ok(Some(mql)) = window.match_media("(prefers-color-scheme: dark)") {
                 return mql.matches();
@@ -198,10 +198,10 @@ fn sync_theme(_is_dark: bool) {
     #[cfg(target_arch = "wasm32")]
     {
         if let Some(window) = web_sys::window() {
-            if let Some(document) = window.document() {
-                if let Some(root) = document.document_element() {
-                    let _ = root.class_list().toggle_with_force("dark", _is_dark);
-                }
+            if let Some(document) = window.document()
+                && let Some(root) = document.document_element()
+            {
+                let _ = root.class_list().toggle_with_force("dark", _is_dark);
             }
             if let Some(storage) = window.local_storage().ok().flatten() {
                 let _ = storage.set_item("theme", if _is_dark { "dark" } else { "light" });

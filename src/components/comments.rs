@@ -11,30 +11,30 @@ use dioxus::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
 fn inject_giscus_script(is_dark: bool) {
-    if let Some(window) = web_sys::window() {
-        if let Some(document) = window.document() {
-            if let Some(existing) = document.get_element_by_id("giscus-container") {
-                existing.set_inner_html("");
-            }
-            if let Ok(script) = document.create_element("script") {
-                let theme = if is_dark { "dark" } else { "light" };
-                let _ = script.set_attribute("src", "https://giscus.app/client.js");
-                let _ = script.set_attribute("data-repo", "imwoo90/the-rust-journey");
-                let _ = script.set_attribute("data-repo-id", "R_kgDOQ3rGbw");
-                let _ = script.set_attribute("data-category", "General");
-                let _ = script.set_attribute("data-mapping", "pathname");
-                let _ = script.set_attribute("data-strict", "0");
-                let _ = script.set_attribute("data-reactions-enabled", "1");
-                let _ = script.set_attribute("data-emit-metadata", "0");
-                let _ = script.set_attribute("data-input-position", "bottom");
-                let _ = script.set_attribute("data-theme", theme);
-                let _ = script.set_attribute("data-lang", "ko");
-                let _ = script.set_attribute("crossorigin", "anonymous");
-                let _ = script.set_attribute("async", "true");
-                
-                if let Some(container) = document.get_element_by_id("giscus-container") {
-                    let _ = container.append_child(&script);
-                }
+    if let Some(window) = web_sys::window()
+        && let Some(document) = window.document()
+    {
+        if let Some(existing) = document.get_element_by_id("giscus-container") {
+            existing.set_inner_html("");
+        }
+        if let Ok(script) = document.create_element("script") {
+            let theme = if is_dark { "dark" } else { "light" };
+            let _ = script.set_attribute("src", "https://giscus.app/client.js");
+            let _ = script.set_attribute("data-repo", "imwoo90/the-rust-journey");
+            let _ = script.set_attribute("data-repo-id", "R_kgDOQ3rGbw");
+            let _ = script.set_attribute("data-category", "General");
+            let _ = script.set_attribute("data-mapping", "pathname");
+            let _ = script.set_attribute("data-strict", "0");
+            let _ = script.set_attribute("data-reactions-enabled", "1");
+            let _ = script.set_attribute("data-emit-metadata", "0");
+            let _ = script.set_attribute("data-input-position", "bottom");
+            let _ = script.set_attribute("data-theme", theme);
+            let _ = script.set_attribute("data-lang", "ko");
+            let _ = script.set_attribute("crossorigin", "anonymous");
+            let _ = script.set_attribute("async", "true");
+
+            if let Some(container) = document.get_element_by_id("giscus-container") {
+                let _ = container.append_child(&script);
             }
         }
     }
