@@ -15,7 +15,18 @@ This project strictly adheres to the compiler-enforced **Agent-Native** architec
 
 ---
 
-## 2. Blog Architecture & Dynamic Content Specifics
+## 2. System Architecture, Module Domains & Blog Specifics
+
+The Rust Journey is a fullstack/SSG developer blog and portfolio built with Rust and Dioxus 0.7. Its root crate index (`src/main.rs`) organizes the codebase into four top-level domains:
+
+1. **`src/views/` (`src/views/mod.rs`)**:
+   - Top-level route views including `home.rs`, `blog.rs`, `projects.rs`, `about.rs`, `contact/mod.rs` (`form.rs`, `info.rs`), `navbar.rs`, `footer.rs`, and `not_found.rs`.
+2. **`src/components/` (`src/components/mod.rs`)**:
+   - Reusable UI widgets (`call_to_action.rs`, `comments.rs`, `gallery.rs`, `share_buttons.rs`) and design system primitives under `ui/mod.rs` (`cards.rs`, `display.rs`, `forms.rs`, `hero.rs`, `layout.rs`).
+3. **`src/data/` (`src/data/mod.rs`)**:
+   - Content metadata models (`blog.rs`, `projects.rs`), site-wide constants (`constants.rs`), and Markdown-to-HTML / base-path utilities (`utils.rs`).
+4. **`src/hooks/` (`src/hooks/mod.rs`)**:
+   - Client-side lifecycle hooks triggering highlight.js syntax highlighting and Mermaid diagram rendering after DOM updates.
 
 This project uses a custom architecture for dynamic Markdown content, static asset resolution, and deployment on GitHub Pages. Follow these rules strictly:
 
@@ -75,9 +86,9 @@ npm run test:e2e
 ---
 
 ## 4. AI Agent Navigation Guide
-1. **Entry Points**: Start with `AGENTS.md` (this file) and `README.md` to grasp project architecture and verification requirements.
-2. **Module Indexing**: Treat `mod.rs` in any directory as the module's architecture map. Read the `//!` header to understand submodules and dependencies before diving into child files.
-3. **Graph Traversal via Rustdoc Links**: Follow compile-checked intra-doc links (`[Type]`) to traverse dependencies deterministically.
+1. **Entry Points**: Start with `AGENTS.md` (this file), `AGENT_NATIVE.md`, and `src/main.rs` to grasp the project architecture and top-level module catalog.
+2. **Module Indexing (`mod.rs` = `index.md`)**: Treat `src/main.rs` and every `mod.rs` as a directory's Living LLM-Wiki index. Read its `//!` header (`## Overview` and `## Submodules`)—which explicitly specifies whether each child is a leaf file (`foo.rs`) or directory index (`foo/mod.rs`)—before opening child files.
+3. **Graph Traversal via Rustdoc Links**: Follow compile-checked intra-doc links (`[Type]`) to traverse dependencies deterministically without brute-force filesystem searches.
 4. **Pre-commit Verification**: Never consider a task complete without passing all 5 steps in the Verification Protocol.
 
 ---
