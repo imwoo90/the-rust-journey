@@ -20,7 +20,7 @@ This project strictly adheres to the compiler-enforced **Agent-Native** architec
 The Rust Journey is a fullstack/SSG developer blog and portfolio built with Rust and Dioxus 0.7. Its root crate index (`src/main.rs`) organizes the codebase into four top-level domains:
 
 1. **`src/views/` (`src/views/mod.rs`)**:
-   - Top-level route views including `home.rs`, `blog.rs`, `projects.rs`, `about.rs`, `contact/mod.rs` (`form.rs`, `info.rs`), `navbar.rs`, `footer.rs`, and `not_found.rs`.
+   - Top-level route views including `home.rs`, `blog.rs`, `projects.rs`, `about.rs`, `contact.rs`, `navbar.rs`, `footer.rs`, and `not_found.rs`.
 2. **`src/components/` (`src/components/mod.rs`)**:
    - Reusable UI widgets (`call_to_action.rs`, `comments.rs`, `gallery.rs`, `share_buttons.rs`) and design system primitives under `ui/mod.rs` (`cards.rs`, `display.rs`, `forms.rs`, `hero.rs`, `layout.rs`).
 3. **`src/data/` (`src/data/mod.rs`)**:

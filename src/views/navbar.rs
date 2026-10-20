@@ -13,14 +13,6 @@ use crate::Route;
 use dioxus::prelude::*;
 
 #[component]
-fn Logo(class: Option<String>) -> Element {
-    let class = class.unwrap_or_default();
-    rsx! {
-        img { class: "size-6 {class}", src: FAVICON, alt: "Logo" }
-    }
-}
-
-#[component]
 fn NavLink(to: Route, children: Element) -> Element {
     let current_route: Route = use_route();
     let is_active = current_route == to
@@ -54,77 +46,54 @@ fn MobileLink(to: Route, onclick: EventHandler<MouseEvent>, children: Element) -
     }
 }
 
-#[component]
-fn DesktopNav() -> Element {
-    rsx! {
-        nav { class: "hidden md:flex items-center gap-8",
-            NavLink { to: Route::Home {}, "Home" }
-            NavLink { to: Route::BlogList {}, "Blog" }
-            NavLink { to: Route::ProjectList {}, "Projects" }
-            NavLink { to: Route::About {}, "About" }
-            NavLink { to: Route::Contact {}, "Contact" }
-        }
-    }
-}
-
-#[component]
-fn MobileNavDrawer(on_close: EventHandler<MouseEvent>) -> Element {
-    rsx! {
-        nav { class: "absolute top-full left-0 w-full bg-background-light dark:bg-background-dark border-b border-text-dark/10 dark:border-white/10 p-4 md:hidden flex flex-col shadow-2xl transition-colors duration-300 animate-in fade-in slide-in-from-top-4",
-            MobileLink { to: Route::Home {}, onclick: move |e| on_close.call(e), "Home" }
-            MobileLink { to: Route::BlogList {}, onclick: move |e| on_close.call(e), "Blog" }
-            MobileLink { to: Route::ProjectList {}, onclick: move |e| on_close.call(e), "Projects" }
-            MobileLink { to: Route::About {}, onclick: move |e| on_close.call(e), "About" }
-            MobileLink { to: Route::Contact {}, onclick: move |e| on_close.call(e), "Contact" }
-        }
-    }
-}
-
-/// Action buttons inside the navbar for theme toggling and mobile menu toggle.
-#[component]
-fn NavActions(mut is_dark: Signal<bool>, mut mobile_menu_open: Signal<bool>) -> Element {
-    rsx! {
-        button {
-            class: "p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-text-dark dark:text-white transition-colors",
-            onclick: move |_| is_dark.set(!is_dark()),
-            span { class: "material-symbols-outlined",
-                if is_dark() { "light_mode" } else { "dark_mode" }
-            }
-        }
-
-        button {
-            class: "md:hidden text-text-dark dark:text-white p-2",
-            onclick: move |_| mobile_menu_open.set(!mobile_menu_open()),
-            span { class: "material-symbols-outlined",
-                if mobile_menu_open() { "close" } else { "menu" }
-            }
-        }
-    }
-}
-
 /// Global top navigation bar hosting site branding, nav links, and theme switching.
 #[component]
 pub fn Navbar() -> Element {
     let mut mobile_menu_open = use_signal(|| false);
-    let is_dark = use_context::<Signal<bool>>();
+    let mut is_dark = use_context::<Signal<bool>>();
 
     rsx! {
         header { class: "flex items-center justify-between whitespace-nowrap border-b border-solid border-text-dark/10 dark:border-white/10 px-4 sm:px-6 lg:px-8 py-4 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-50 transition-colors duration-300",
             Link {
                 to: Route::Home {},
                 class: "flex items-center gap-4 text-text-dark dark:text-white group",
-                Logo { class: "group-hover:scale-110 transition-transform duration-300" }
+                img { class: "size-6 group-hover:scale-110 transition-transform duration-300", src: FAVICON, alt: "Logo" }
                 h2 { class: "text-text-dark dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]",
                     "{APP_TITLE}"
                 }
             }
             div { class: "flex flex-1 justify-end items-center gap-4",
-                DesktopNav {}
-                NavActions { is_dark, mobile_menu_open }
+                nav { class: "hidden md:flex items-center gap-8",
+                    NavLink { to: Route::Home {}, "Home" }
+                    NavLink { to: Route::BlogList {}, "Blog" }
+                    NavLink { to: Route::ProjectList {}, "Projects" }
+                    NavLink { to: Route::About {}, "About" }
+                    NavLink { to: Route::Contact {}, "Contact" }
+                }
+                button {
+                    class: "p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-text-dark dark:text-white transition-colors",
+                    onclick: move |_| is_dark.set(!is_dark()),
+                    span { class: "material-symbols-outlined",
+                        if is_dark() { "light_mode" } else { "dark_mode" }
+                    }
+                }
+                button {
+                    class: "md:hidden text-text-dark dark:text-white p-2",
+                    onclick: move |_| mobile_menu_open.set(!mobile_menu_open()),
+                    span { class: "material-symbols-outlined",
+                        if mobile_menu_open() { "close" } else { "menu" }
+                    }
+                }
             }
 
             if mobile_menu_open() {
-                MobileNavDrawer { on_close: move |_| mobile_menu_open.set(false) }
+                nav { class: "absolute top-full left-0 w-full bg-background-light dark:bg-background-dark border-b border-text-dark/10 dark:border-white/10 p-4 md:hidden flex flex-col shadow-2xl transition-colors duration-300 animate-in fade-in slide-in-from-top-4",
+                    MobileLink { to: Route::Home {}, onclick: move |_| mobile_menu_open.set(false), "Home" }
+                    MobileLink { to: Route::BlogList {}, onclick: move |_| mobile_menu_open.set(false), "Blog" }
+                    MobileLink { to: Route::ProjectList {}, onclick: move |_| mobile_menu_open.set(false), "Projects" }
+                    MobileLink { to: Route::About {}, onclick: move |_| mobile_menu_open.set(false), "About" }
+                    MobileLink { to: Route::Contact {}, onclick: move |_| mobile_menu_open.set(false), "Contact" }
+                }
             }
         }
         Outlet::<Route> {}

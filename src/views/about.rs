@@ -13,68 +13,19 @@ use dioxus::prelude::*;
 
 const HEADSHOT_SRC: Asset = AVATAR;
 
-#[component]
-fn AboutProfileHeader() -> Element {
-    rsx! {
-        section { class: "flex flex-col md:flex-row items-center gap-8 md:gap-12 px-4",
-            div { class: "w-48 h-48 md:w-60 md:h-60 flex-shrink-0",
-                img {
-                    class: "w-full h-full rounded-full object-cover border-4 border-primary-light/50 shadow-lg",
-                    src: HEADSHOT_SRC,
-                    alt: "Wim's developer mascot avatar",
-                }
-            }
-            div { class: "flex flex-col gap-4 text-center md:text-left",
-                h1 { class: "text-text-dark dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] transition-colors",
-                    "Hi, I'm {AUTHOR_NAME}."
-                }
-                p { class: "text-lg md:text-xl font-normal leading-normal text-text-dark/80 dark:text-[#D4D4D4] transition-colors",
-                    "I'm a full-stack embedded developer with a singular passion: leveraging the power of Rust to build robust, efficient, and secure software across every conceivable platform. From the tight constraints of bare-metal microcontrollers to the vast scale of cloud backends, I believe Rust is the key to a new era of reliable systems."
-                }
-            }
-        }
-    }
-}
-
-#[component]
-fn AboutPhilosophy() -> Element {
-    rsx! {
-        div { class: "flex flex-col gap-4",
-            SectionTitle { title: "My Philosophy" }
-            p { class: "text-base font-normal leading-relaxed text-text-dark/80 dark:text-[#D4D4D4] transition-colors",
-                "The \"Rust-for-everything\" philosophy isn't just a technical preference; it's a commitment to quality. It means applying the principles of memory safety, zero-cost abstractions, and fearless concurrency to every layer of the stack. This approach minimizes bugs, maximizes performance, and creates software that is a pleasure to maintain and extend, whether it's firmware for a tiny IoT device or a high-traffic web service."
-            }
-        }
-    }
-}
-
-#[component]
-fn AboutCoreSkills() -> Element {
-    let skills = [
-        "Embedded Rust",
-        "Bare-Metal Firmware",
-        "RTOS Integration",
-        "WebAssembly (WASM)",
-        "Async Rust (Tokio)",
-        "Backend APIs (axum)",
-        "Cross-Platform Mobile",
-        "CI/CD & DevOps",
-        "Linux Systems",
-        "Agent-Native Architecture",
-        "AST Analysis (syn)",
-    ];
-
-    rsx! {
-        div { class: "flex flex-col gap-4",
-            SectionTitle { title: "Core Skills" }
-            div { class: "flex flex-wrap gap-3",
-                for skill in skills {
-                    Badge { text: skill.to_string() }
-                }
-            }
-        }
-    }
-}
+const SKILLS: &[&str] = &[
+    "Embedded Rust",
+    "Bare-Metal Firmware",
+    "RTOS Integration",
+    "WebAssembly (WASM)",
+    "Async Rust (Tokio)",
+    "Backend APIs (axum)",
+    "Cross-Platform Mobile",
+    "CI/CD & DevOps",
+    "Linux Systems",
+    "Agent-Native Architecture",
+    "AST Analysis (syn)",
+];
 
 struct JourneyMilestone {
     date: &'static str,
@@ -133,10 +84,38 @@ pub fn About() -> Element {
         document::Title { "About - {APP_TITLE}" }
         Container {
             main { class: "flex flex-col gap-16 md:gap-24 mt-8 md:mt-16",
-                AboutProfileHeader {}
+                section { class: "flex flex-col md:flex-row items-center gap-8 md:gap-12 px-4",
+                    div { class: "w-48 h-48 md:w-60 md:h-60 flex-shrink-0",
+                        img {
+                            class: "w-full h-full rounded-full object-cover border-4 border-primary-light/50 shadow-lg",
+                            src: HEADSHOT_SRC,
+                            alt: "Wim's developer mascot avatar",
+                        }
+                    }
+                    div { class: "flex flex-col gap-4 text-center md:text-left",
+                        h1 { class: "text-text-dark dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] transition-colors",
+                            "Hi, I'm {AUTHOR_NAME}."
+                        }
+                        p { class: "text-lg md:text-xl font-normal leading-normal text-text-dark/80 dark:text-[#D4D4D4] transition-colors",
+                            "I'm a full-stack embedded developer with a singular passion: leveraging the power of Rust to build robust, efficient, and secure software across every conceivable platform. From the tight constraints of bare-metal microcontrollers to the vast scale of cloud backends, I believe Rust is the key to a new era of reliable systems."
+                        }
+                    }
+                }
                 Section { class: "grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 px-4",
-                    AboutPhilosophy {}
-                    AboutCoreSkills {}
+                    div { class: "flex flex-col gap-4",
+                        SectionTitle { title: "My Philosophy" }
+                        p { class: "text-base font-normal leading-relaxed text-text-dark/80 dark:text-[#D4D4D4] transition-colors",
+                            "The \"Rust-for-everything\" philosophy isn't just a technical preference; it's a commitment to quality. It means applying the principles of memory safety, zero-cost abstractions, and fearless concurrency to every layer of the stack. This approach minimizes bugs, maximizes performance, and creates software that is a pleasure to maintain and extend, whether it's firmware for a tiny IoT device or a high-traffic web service."
+                        }
+                    }
+                    div { class: "flex flex-col gap-4",
+                        SectionTitle { title: "Core Skills" }
+                        div { class: "flex flex-wrap gap-3",
+                            for skill in SKILLS {
+                                Badge { text: skill.to_string() }
+                            }
+                        }
+                    }
                 }
                 AboutJourneyTimeline {}
             }

@@ -7,7 +7,7 @@
 //! ## Submodules
 //! - [`about`] (`about.rs`): Biography, engineering background, skill matrix, and experience timeline.
 //! - [`blog`] (`blog.rs`): Paginated blog article directory and full-content markdown reading views.
-//! - [`contact`] (`contact/mod.rs`): Interactive contact message form and developer coordination sidebar.
+//! - [`contact`] (`contact.rs`): Interactive contact message form and developer coordination sidebar.
 //! - [`footer`] (`footer.rs`): Global persistent site footer with copyright, links, and social anchors.
 //! - [`home`] (`home.rs`): Primary landing view showcasing recent articles, projects, and mission statement.
 //! - [`navbar`] (`navbar.rs`): Persistent responsive navigation bar, mobile menu drawer, and theme toggler.
